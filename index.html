@@ -1,0 +1,2843 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Galaxy Portal!</title>
+    <!-- Importing a fun, chunky font to mimic the 2000s game aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind for basic layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --red: #FF4B4B;
+            --red-dark: #CC0000;
+            --green: #00CC66;
+            --green-dark: #00994C;
+            --blue: #3399FF;
+            --blue-dark: #0066CC;
+            --orange: #FF9900;
+            --orange-dark: #CC6600;
+            --yellow: #FFEA00;
+            --purple: #9b59b6;
+            --purple-dark: #8e44ad;
+            --neon-green: #39ff14;
+            --neon-green-dark: #00b300;
+            --cyber-dark: #1a1a2e;
+            --cyber-darker: #0f0f1b;
+            --teal: #00cec9;
+            --teal-dark: #00b894;
+            --py-blue: #306998;
+            --py-dark: #234d70;
+            --pink-neon: #ff00ff;
+            --cyan-neon: #00ffff;
+        }
+
+        /* Base Body (Light Mode - Default Hub) */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #74b9ff;
+            background-image: radial-gradient(#ffffff 15%, transparent 16%), radial-gradient(#ffffff 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: #333;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.5s ease, background-image 0.5s ease;
+        }
+
+        /* --- UNIVERSE THEMES --- */
+        body.theme-genetics {
+            background-color: #e0f7fa;
+            background-image: radial-gradient(#b2ebf2 15%, transparent 16%), radial-gradient(#b2ebf2 15%, transparent 16%);
+        }
+
+        body.theme-microbiome {
+            background-color: #dcedc8;
+            background-image: radial-gradient(#aed581 15%, transparent 16%), radial-gradient(#aed581 15%, transparent 16%);
+        }
+
+        body.theme-cyber {
+            background-color: #050505;
+            background-image: radial-gradient(#111 15%, transparent 16%), radial-gradient(#111 15%, transparent 16%);
+        }
+
+        body.theme-cyber .game-container {
+            background-color: var(--cyber-darker);
+            border-color: var(--neon-green-dark);
+            box-shadow: 15px 15px 0px rgba(0, 255, 65, 0.15);
+            color: #e0e0e0;
+        }
+
+        body.theme-cyber .cyber-prompt-box {
+            background-color: #000 !important;
+            color: var(--neon-green) !important;
+            border-color: var(--neon-green-dark) !important;
+        }
+
+        body.theme-cyber .settings-btn {
+            background: #000;
+            border-color: var(--neon-green);
+            box-shadow: 3px 3px 0 var(--neon-green-dark);
+        }
+
+        body.theme-cyber .star-counter {
+            background: var(--cyber-dark);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 5px 5px 0 var(--neon-green-dark);
+        }
+
+        body.theme-cyber .rank-badge {
+            background: #000;
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 3px 3px 0 var(--neon-green-dark);
+        }
+
+        body.theme-cyber .nav-btn {
+            background: #2d3436;
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 6px 0 #000;
+        }
+
+        body.theme-data {
+            background-color: #cfd8dc;
+            background-image: linear-gradient(#b0bec5 2px, transparent 2px), linear-gradient(90deg, #b0bec5 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
+
+        body.theme-data .game-container {
+            background-color: #eceff1;
+            border-color: #455a64;
+            box-shadow: 15px 15px 0px rgba(69, 90, 100, 0.3);
+        }
+
+        body.theme-phd {
+            background-color: #1a237e;
+            background-image: radial-gradient(#283593 15%, transparent 16%), radial-gradient(#283593 15%, transparent 16%);
+            color: #fff;
+        }
+
+        body.theme-phd .game-container {
+            background-color: #283593;
+            border-color: #ffd54f;
+            box-shadow: 15px 15px 0px rgba(255, 213, 79, 0.2);
+            color: white;
+        }
+
+        body.theme-phd .star-counter,
+        body.theme-phd .rank-badge,
+        body.theme-phd .settings-btn {
+            border-color: #ffd54f;
+        }
+
+        body.theme-phd .nav-btn {
+            background: #3949ab;
+            color: #ffd54f;
+            border-color: #ffd54f;
+            box-shadow: 0 6px 0 #1a237e;
+        }
+
+        body.theme-phd h2 {
+            color: white;
+        }
+
+        body.theme-master {
+            background-color: #000;
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 0, 0.1) 25%, rgba(0, 255, 0, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.1) 75%, rgba(0, 255, 0, 0.1) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 0, 0.1) 25%, rgba(0, 255, 0, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.1) 75%, rgba(0, 255, 0, 0.1) 76%, transparent 77%, transparent);
+            background-size: 30px 30px;
+            color: var(--neon-green);
+        }
+
+        body.theme-master .game-container {
+            background-color: #020a02;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+            color: #e0e0e0;
+        }
+
+        body.theme-master .star-counter,
+        body.theme-master .rank-badge,
+        body.theme-master .settings-btn {
+            background: #000;
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        body.theme-master .nav-btn {
+            background: #000;
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 6px 0 #002200;
+        }
+
+        body.theme-master h2 {
+            color: var(--neon-green);
+        }
+
+        /* --- GLOBAL UNLOCKS OVERRIDES (Highest Priority) --- */
+        body.cursor-wand {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="gold" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8l1.4 1.4"/><path d="M10.6 4.6l1.4 1.4"/><path d="M17.8 6.2l1.4-1.4"/><path d="M10.6 13.4l1.4-1.4"/><path d="M3 21l9-9"/><path d="M12.2 14.8l-2.8-2.8"/></svg>'), auto !important;
+        }
+
+        body.cursor-alien {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="%2339ff14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="9" cy="10" r="1" fill="black"/><circle cx="15" cy="10" r="1" fill="black"/></svg>'), auto !important;
+        }
+
+        body.matrix-override {
+            background-color: #000 !important;
+            background-image: none !important;
+            color: var(--neon-green) !important;
+        }
+
+        body.matrix-override .game-container {
+            background-color: var(--cyber-darker) !important;
+            border-color: var(--neon-green-dark) !important;
+            box-shadow: 15px 15px 0px rgba(0, 255, 65, 0.15) !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.matrix-override .settings-btn,
+        body.matrix-override .star-counter,
+        body.matrix-override .rank-badge,
+        body.matrix-override .avatar-badge {
+            background: #000 !important;
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green) !important;
+            box-shadow: 3px 3px 0 var(--neon-green-dark) !important;
+        }
+
+        body.matrix-override .nav-btn {
+            background: #2d3436 !important;
+            color: var(--neon-green) !important;
+            border-color: var(--neon-green) !important;
+            box-shadow: 0 6px 0 #000 !important;
+        }
+
+        body.neon-override {
+            background-color: #0b001a !important;
+            background-image: linear-gradient(0deg, transparent 24%, rgba(255, 0, 255, 0.3) 25%, rgba(255, 0, 255, 0.3) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.3) 75%, rgba(0, 255, 255, 0.3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 0, 255, 0.3) 25%, rgba(255, 0, 255, 0.3) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.3) 75%, rgba(0, 255, 255, 0.3) 76%, transparent 77%, transparent) !important;
+            background-size: 50px 50px !important;
+            color: var(--cyan-neon) !important;
+        }
+
+        body.neon-override .game-container {
+            background-color: #1a0033 !important;
+            border-color: var(--pink-neon) !important;
+            box-shadow: 0 0 20px var(--pink-neon) !important;
+            color: white !important;
+        }
+
+        body.neon-override .chunky-card {
+            border-color: var(--cyan-neon) !important;
+        }
+
+        /* UI Elements */
+        .top-left-ui {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .settings-btn {
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            background: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid #2d3436;
+            box-shadow: 3px 3px 0 #2d3436;
+            flex-shrink: 0;
+        }
+
+        .settings-btn:hover {
+            transform: rotate(45deg) scale(1.1);
+        }
+
+        .avatar-badge {
+            background: white;
+            border: 4px solid #2d3436;
+            border-radius: 50px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 3px 3px 0 #2d3436;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .avatar-badge:hover {
+            transform: scale(1.05);
+        }
+
+        body.theme-cyber .avatar-badge,
+        body.theme-master .avatar-badge {
+            background: #000;
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 3px 3px 0 var(--neon-green-dark);
+        }
+
+        body.theme-phd .avatar-badge {
+            background: #283593;
+            border-color: #ffd54f;
+            color: white;
+            box-shadow: 3px 3px 0 #ffca28;
+        }
+
+        .header-stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .star-counter {
+            background: var(--yellow);
+            border: 4px solid #2d3436;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            box-shadow: 5px 5px 0 #2d3436;
+            color: #2d3436;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .rank-badge {
+            background: white;
+            border: 3px solid #2d3436;
+            border-radius: 10px;
+            padding: 4px 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 3px 3px 0 #2d3436;
+            color: #2d3436;
+            cursor: help;
+        }
+
+        .star-counter:hover {
+            transform: scale(1.05);
+        }
+
+        .star-pop {
+            animation: pop 0.4s ease-out;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            z-index: 9999;
+            animation: fall 2s linear forwards;
+            border-radius: 2px;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Easter Egg */
+        .rocket {
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .rocket:hover {
+            transform: scale(1.2) rotate(-10deg);
+        }
+
+        .rocket-launch {
+            animation: flyUp 1.5s forwards ease-in;
+        }
+
+        @keyframes flyUp {
+            0% {
+                transform: translateY(0) scale(1.2) rotate(-10deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-500px) scale(0.5) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        .fun-font {
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 1px;
+        }
+
+        .game-container {
+            background-color: white;
+            border: 8px solid #2d3436;
+            border-radius: 30px;
+            box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 1000px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+
+        .site-header {
+            text-align: center;
+            background: var(--yellow);
+            border: 6px solid #2d3436;
+            border-radius: 20px;
+            padding: 20px;
+            margin: -50px auto 30px auto;
+            width: 80%;
+            box-shadow: 0 10px 0 #2d3436;
+            transform: rotate(-2deg);
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .site-header h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin: 0;
+            transition: color 0.5s ease;
+            text-shadow: -3px -3px 0 #2d3436, 3px -3px 0 #2d3436, -3px 3px 0 #2d3436, 3px 3px 0 #2d3436, 4px 4px 0 #2d3436;
+        }
+
+        .header-cyber {
+            background: var(--cyber-dark);
+            border-color: var(--neon-green-dark);
+            box-shadow: 0 10px 0 var(--neon-green-dark);
+        }
+
+        .header-cyber h1 {
+            color: var(--neon-green);
+            text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000, 4px 4px 0 #000;
+        }
+
+        .header-phd {
+            background: #1a237e;
+            border-color: #ffd54f;
+            box-shadow: 0 10px 0 #ffca28;
+        }
+
+        .header-phd h1 {
+            color: #fff;
+            text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000, 4px 4px 0 #000;
+        }
+
+        .header-master {
+            background: #002200;
+            border-color: var(--neon-green);
+            box-shadow: 0 10px 0 var(--neon-green-dark);
+        }
+
+        .header-master h1 {
+            color: var(--neon-green);
+            text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000, 4px 4px 0 #000;
+        }
+
+        /* View Management */
+        .app-view {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .app-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .data-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .data-tab-content.active {
+            display: block;
+        }
+
+        /* 3D Chunky Buttons */
+        .chunky-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            border-radius: 25px;
+            border: 6px solid #2d3436;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chunky-card:active {
+            transform: translateY(12px);
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(3px 3px 0px rgba(0, 0, 0, 0.3));
+        }
+
+        .card-red {
+            background-color: var(--red);
+            color: white;
+            box-shadow: 0 12px 0 var(--red-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-red:active {
+            box-shadow: 0 0 0 var(--red-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-green {
+            background-color: var(--green);
+            color: white;
+            box-shadow: 0 12px 0 var(--green-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-green:active {
+            box-shadow: 0 0 0 var(--green-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-purple {
+            background-color: var(--purple);
+            color: white;
+            box-shadow: 0 12px 0 var(--purple-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-purple:active {
+            box-shadow: 0 0 0 var(--purple-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-orange {
+            background-color: var(--orange);
+            color: white;
+            box-shadow: 0 12px 0 var(--orange-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-orange:active {
+            box-shadow: 0 0 0 var(--orange-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-teal {
+            background-color: var(--teal);
+            color: white;
+            box-shadow: 0 12px 0 var(--teal-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-teal:active {
+            box-shadow: 0 0 0 var(--teal-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-blue {
+            background-color: var(--blue);
+            color: white;
+            box-shadow: 0 12px 0 var(--blue-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-blue:active {
+            box-shadow: 0 0 0 var(--blue-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-python {
+            background-color: var(--py-blue);
+            color: #FFD43B;
+            box-shadow: 0 12px 0 var(--py-dark), 0 18px 0 #2d3436;
+        }
+
+        .card-python:active {
+            box-shadow: 0 0 0 var(--py-dark), 0 6px 0 #2d3436;
+        }
+
+        .card-cyber {
+            background-color: var(--cyber-darker);
+            color: var(--neon-green);
+            box-shadow: 0 12px 0 black, 0 18px 0 #2d3436;
+            border-color: var(--neon-green-dark);
+        }
+
+        .card-cyber:active {
+            box-shadow: 0 0 0 black, 0 6px 0 #2d3436;
+        }
+
+        .card-boss {
+            background-color: #000;
+            color: var(--yellow);
+            box-shadow: 0 12px 0 #333, 0 18px 0 var(--red);
+            border-color: var(--red);
+            border-width: 8px;
+        }
+
+        .card-boss:active {
+            box-shadow: 0 0 0 #333, 0 6px 0 var(--red);
+        }
+
+        .card-phd {
+            background-color: #311b92;
+            color: white;
+            box-shadow: 0 12px 0 #1a237e, 0 18px 0 #2d3436;
+            border-color: #ffd54f;
+        }
+
+        .card-phd:active {
+            box-shadow: 0 0 0 #1a237e, 0 6px 0 #2d3436;
+        }
+
+        .card-master {
+            background-color: #001100;
+            color: var(--neon-green);
+            box-shadow: 0 12px 0 #000, 0 18px 0 #2d3436;
+            border-color: var(--neon-green);
+            border-width: 6px;
+        }
+
+        .card-master:active {
+            box-shadow: 0 0 0 #000, 0 6px 0 #2d3436;
+        }
+
+        .card-quiz {
+            background-color: #ff9f43;
+            color: white;
+            box-shadow: 0 12px 0 #e67e22, 0 18px 0 #2d3436;
+            border-color: #fff;
+            border-width: 6px;
+        }
+
+        .card-quiz:active {
+            box-shadow: 0 0 0 #e67e22, 0 6px 0 #2d3436;
+        }
+
+        .chunky-card h2 {
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .nav-btn {
+            font-family: 'Fredoka One', cursive;
+            background: var(--yellow);
+            color: #2d3436;
+            border: 4px solid #2d3436;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #d4c300;
+            font-size: 1.2rem;
+            transition: all 0.1s;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #d4c300 !important;
+        }
+
+        /* Modals (Notebook, Boss, Settings, Trophy, Onboarding) */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+        }
+
+        .notebook-modal,
+        .generic-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            background-color: #fff;
+            background-image: repeating-linear-gradient(white, white 30px, #add8e6 31px, #add8e6 32px);
+            background-attachment: local;
+            border: 6px solid #2d3436;
+            border-left: 40px solid var(--red);
+            border-radius: 15px;
+            box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            padding: 30px 40px 40px 30px;
+            overflow-y: auto;
+        }
+
+        .generic-modal {
+            background-image: none;
+            border-left: 6px solid #2d3436;
+            text-align: center;
+        }
+
+        .notebook-modal.cyber-style {
+            background-color: #0D0208;
+            background-image: repeating-linear-gradient(#0D0208, #0D0208 30px, #1a3320 31px, #1a3320 32px);
+            border-left: 40px solid var(--neon-green-dark);
+            border-color: var(--neon-green);
+            color: #00FF41;
+        }
+
+        .notebook-modal.phd-style {
+            background-color: #e8eaf6;
+            background-image: none;
+            border-left: 40px solid #1a237e;
+            border-color: #3f51b5;
+            color: #1a237e;
+        }
+
+        .notebook-modal.master-style {
+            background-color: #000;
+            background-image: none;
+            border-left: 40px solid var(--neon-green-dark);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        .notebook-modal::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -30px;
+            bottom: 20px;
+            width: 15px;
+            background-image: radial-gradient(circle, #2d3436 40%, transparent 45%);
+            background-size: 15px 40px;
+            background-repeat: repeat-y;
+        }
+
+        .cyber-style::before {
+            background-image: radial-gradient(circle, #000 40%, transparent 45%);
+        }
+
+        .phd-style::before {
+            background-image: radial-gradient(circle, #ffd54f 40%, transparent 45%);
+        }
+
+        .master-style::before {
+            display: none;
+        }
+
+        .generic-modal::before {
+            display: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-family: 'Fredoka One', cursive;
+            background: var(--red);
+            color: white;
+            border: 4px solid #2d3436;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--red-dark);
+            transition: all 0.1s;
+            z-index: 10;
+        }
+
+        .cyber-style .close-btn {
+            border-color: var(--neon-green);
+            box-shadow: 0 4px 0 #000;
+        }
+
+        .phd-style .close-btn {
+            background: #ffd54f;
+            color: #1a237e;
+            border-color: #1a237e;
+            box-shadow: 0 4px 0 #3f51b5;
+        }
+
+        .master-style .close-btn {
+            background: #000;
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 4px 0 var(--neon-green-dark);
+        }
+
+        .close-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 var(--red-dark) !important;
+        }
+
+        .notebook-content h2 {
+            font-size: 2.2rem;
+            color: var(--blue-dark);
+            border-bottom: 4px dashed var(--blue);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cyber-style .notebook-content h2 {
+            color: var(--neon-green);
+            border-bottom-color: var(--neon-green);
+        }
+
+        .phd-style .notebook-content h2 {
+            color: #1a237e;
+            border-bottom-color: #3f51b5;
+        }
+
+        .master-style .notebook-content h2 {
+            color: var(--neon-green);
+            border-bottom-color: var(--neon-green-dark);
+        }
+
+        .notebook-content p,
+        .notebook-content ul {
+            font-size: 1.1rem;
+            line-height: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .notebook-content ul {
+            margin-left: 20px;
+        }
+
+        .notebook-content li::marker {
+            content: '⭐ ';
+        }
+
+        .cyber-style .notebook-content li::marker {
+            content: '🔒 ';
+        }
+
+        .phd-style .notebook-content li::marker {
+            content: '🎓 ';
+        }
+
+        .master-style .notebook-content li::marker {
+            content: '🥷 ';
+        }
+
+        /* Flashcards (3D Flip) */
+        .flashcard-container {
+            background-color: transparent;
+            width: 100%;
+            height: 120px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard-container.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            border: 4px solid #2d3436;
+            padding: 10px;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: var(--yellow);
+            color: #2d3436;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+        }
+
+        .flashcard-back {
+            background-color: var(--blue);
+            color: white;
+            transform: rotateY(180deg);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .cyber-style .flashcard-front,
+        .master-style .flashcard-front {
+            background-color: #000;
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+        .cyber-style .flashcard-back,
+        .master-style .flashcard-back {
+            background-color: var(--neon-green-dark);
+            color: #000;
+            border-color: #000;
+        }
+
+        .phd-style .flashcard-front {
+            background-color: #ffd54f;
+            color: #1a237e;
+            border-color: #1a237e;
+        }
+
+        .phd-style .flashcard-back {
+            background-color: #1a237e;
+            color: #ffd54f;
+            border-color: #ffd54f;
+        }
+
+        /* Quiz Box */
+        .quiz-box {
+            background: #fff9c4;
+            border: 4px solid #ffb300;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1);
+            transform: rotate(1deg);
+            color: #333;
+        }
+
+        .cyber-style .quiz-box {
+            background: #0D0208;
+            border-color: var(--neon-green);
+            color: white;
+            transform: rotate(-1deg);
+        }
+
+        .phd-style .quiz-box {
+            background: #c5cae9;
+            border-color: #3f51b5;
+            color: #1a237e;
+            transform: rotate(0deg);
+        }
+
+        .master-style .quiz-box {
+            background: #020a02;
+            border-color: var(--neon-green-dark);
+            color: var(--neon-green);
+            transform: rotate(0deg);
+        }
+
+        .quiz-box h3 {
+            color: #d84315;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        .cyber-style .quiz-box h3,
+        .master-style .quiz-box h3 {
+            color: var(--neon-green);
+        }
+
+        .phd-style .quiz-box h3 {
+            color: #1a237e;
+        }
+
+        .action-btn {
+            font-family: 'Fredoka One', cursive;
+            background: var(--blue);
+            color: white;
+            border: 3px solid #2d3436;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 var(--blue-dark);
+            margin: 5px;
+            transition: all 0.1s;
+            font-size: 1rem;
+        }
+
+        .cyber-style .action-btn,
+        .master-style .action-btn {
+            background: #1a1a2e;
+            color: #00FF41;
+            border-color: var(--neon-green);
+            box-shadow: 0 5px 0 black;
+        }
+
+        .phd-style .action-btn {
+            background: #1a237e;
+            color: #ffd54f;
+            border-color: #ffd54f;
+            box-shadow: 0 5px 0 #3949ab;
+        }
+
+        .action-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 var(--blue-dark) !important;
+        }
+
+        .cyber-style .action-btn:active,
+        .master-style .action-btn:active {
+            box-shadow: 0 0 0 black !important;
+        }
+
+        .phd-style .action-btn:active {
+            box-shadow: 0 0 0 transparent !important;
+        }
+
+        .feedback-msg {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .feedback-correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .cyber-style .feedback-correct,
+        .master-style .feedback-correct {
+            background: #003300;
+            color: #39ff14;
+            border-color: #39ff14;
+        }
+
+        .feedback-incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .cyber-style .feedback-incorrect,
+        .master-style .feedback-incorrect {
+            background: #330000;
+            color: #ff3333;
+            border-color: #ff3333;
+        }
+
+        /* Trophy Items */
+        .trophy-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            background: #f9f9f9;
+            opacity: 0.6;
+            filter: grayscale(100%);
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .trophy-item.unlocked {
+            opacity: 1;
+            filter: none;
+            border-color: gold;
+            background: #fffde7;
+            box-shadow: 3px 3px 0px gold;
+        }
+
+        .trophy-icon {
+            font-size: 2.5rem;
+        }
+
+        .trophy-details h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-family: 'Fredoka One', cursive;
+            color: #333;
+        }
+
+        .trophy-details p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+        }
+
+        /* Specific Widget Styles */
+        .red-flag {
+            border: 2px dashed transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .red-flag:hover {
+            border-color: red;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        .red-flag.found {
+            border-color: red;
+            background-color: rgba(255, 0, 0, 0.3);
+            font-weight: bold;
+        }
+
+        .maze-cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .maze-wall {
+            background-color: #b91c1c;
+            border: 1px solid #7f1d1d;
+        }
+
+        .maze-path {
+            background-color: #1f2937;
+        }
+
+        /* Data Nav Tabs */
+        .data-tab-btn {
+            opacity: 0.6;
+            transform: scale(0.95);
+            transition: all 0.2s;
+        }
+
+        .data-tab-btn.active {
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 5px 0 #000 !important;
+        }
+
+        /* Rat Breeding Animation */
+        .rat-jump {
+            animation: ratJump 0.4s ease-out;
+        }
+
+        @keyframes ratJump {
+            0% {
+                transform: translateY(0) scale(1.1);
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.2);
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .rat-card {
+            transition: all 0.2s;
+        }
+
+        .rat-card:hover {
+            transform: scale(1.05);
+            border-color: #FF9900;
+        }
+
+        /* Mega Quiz Progress Bar */
+        .quiz-progress-bar {
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: var(--green);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- UI Overlays -->
+    <div class="top-left-ui">
+        <div class="settings-btn" onclick="window.openSettings()">⚙️</div>
+        <!-- Avatar Display -->
+        <div class="avatar-badge" onclick="window.openTrophies()">
+            <div id="ui-avatar-display" class="text-3xl tracking-tighter" style="line-height: 1;">👨🏻</div>
+            <div class="font-bold hidden md:block" id="ui-player-name"
+                style="font-family: 'Fredoka One', cursive; font-size: 1.1rem; letter-spacing: 1px;">Player</div>
+        </div>
+    </div>
+
+    <div class="header-stats">
+        <div class="star-counter" id="star-counter" onclick="window.switchView('view-shop')">⭐ <span
+                id="star-text">0</span></div>
+        <div class="rank-badge" id="rank-badge" onclick="window.openTrophies()">Rank: Space Cadet</div>
+    </div>
+
+    <!-- Onboarding Modal -->
+    <div class="overlay" id="onboarding-overlay" style="z-index: 3000; background: rgba(0,0,0,0.9);"></div>
+    <div class="generic-modal" id="onboarding-modal"
+        style="z-index: 3001; text-align: center; border-left: 6px solid #2d3436;">
+        <h2 class="fun-font text-3xl mb-4 text-blue-600">🚀 Welcome to Learning Galaxy!</h2>
+        <p class="mb-4 font-bold text-lg text-gray-700">Create your researcher profile before we launch.</p>
+
+        <input type="text" id="onboard-name"
+            class="border-4 border-gray-400 p-3 rounded-xl w-full text-xl font-bold mb-6 text-center"
+            placeholder="Enter your Name..." maxlength="15">
+
+        <p class="mb-2 font-bold text-gray-700">Select your Base Avatar:</p>
+        <div class="flex justify-center gap-4 mb-6 text-4xl">
+            <div class="cursor-pointer border-4 border-blue-500 rounded-full p-2 bg-gray-100"
+                onclick="window.selectBaseAvatar(this, '👨🏻')">👨🏻</div>
+            <div class="cursor-pointer border-4 border-transparent hover:border-blue-500 rounded-full p-2 bg-gray-100 transition-all"
+                onclick="window.selectBaseAvatar(this, '👱🏻‍♀️')">👱🏻‍♀️</div>
+            <div class="cursor-pointer border-4 border-transparent hover:border-blue-500 rounded-full p-2 bg-gray-100 transition-all"
+                onclick="window.selectBaseAvatar(this, '🤖')">🤖</div>
+            <div class="cursor-pointer border-4 border-transparent hover:border-blue-500 rounded-full p-2 bg-gray-100 transition-all"
+                onclick="window.selectBaseAvatar(this, '👽')">👽</div>
+            <div class="cursor-pointer border-4 border-transparent hover:border-blue-500 rounded-full p-2 bg-gray-100 transition-all"
+                onclick="window.selectBaseAvatar(this, '🐶')">🐶</div>
+        </div>
+
+        <button class="action-btn !bg-green-500 !text-xl w-full" onclick="window.finishOnboarding()">Start
+            Exploring</button>
+    </div>
+
+    <div class="game-container">
+        <header class="site-header" id="main-header">
+            <h1 id="header-title">🌍 Learning Galaxy! <span class="rocket" onclick="window.launchRocket(this)">🚀</span>
+            </h1>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: THE LANDING PAGE (PORTAL HUB)      -->
+        <!-- ========================================== -->
+        <div id="view-hub" class="app-view active">
+            <div class="text-center mb-6 mt-2 flex flex-wrap justify-center gap-4">
+                <button class="action-btn !bg-yellow-400 !text-black !m-0 flex items-center gap-2"
+                    onclick="window.switchView('view-shop')">🛒 Star Shop</button>
+                <button class="action-btn !bg-orange-400 !text-black !m-0 flex items-center gap-2"
+                    onclick="window.openTrophies()">🏆 Profile & Trophies</button>
+            </div>
+
+            <!-- Balanced 2x2 Grid (4 Core Subjects) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 max-w-4xl mx-auto">
+                <div class="chunky-card card-purple" onclick="window.switchView('view-genetics')">
+                    <div class="card-icon">🧬</div>
+                    <h2 class="text-3xl">Genetics</h2>
+                    <p class="font-bold text-lg">DNA & Traits</p>
+                </div>
+                <div class="chunky-card card-green" onclick="window.switchView('view-microbiome')">
+                    <div class="card-icon">🦠</div>
+                    <h2 class="text-3xl">Microbiome</h2>
+                    <p class="font-bold text-lg">Cells & Germs</p>
+                </div>
+                <div class="chunky-card card-cyber" onclick="window.switchView('view-cyber')">
+                    <div class="card-icon">🔐</div>
+                    <h2 class="text-3xl">Cyber City</h2>
+                    <p class="font-bold text-lg">Security & Hacks</p>
+                </div>
+                <div class="chunky-card card-teal" onclick="window.switchView('view-data')">
+                    <div class="card-icon">📈</div>
+                    <h2 class="text-3xl">Data Dash</h2>
+                    <p class="font-bold text-lg">SQL, Python, R</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: STAR SHOP (WITH AVATAR COSMETICS)    -->
+        <!-- ========================================== -->
+        <div id="view-shop" class="app-view text-center">
+            <button class="nav-btn" onclick="window.switchView('view-hub')">⬅️ Back to Hub</button>
+            <h2 class="text-3xl fun-font mb-2 mt-4">🛒 The Star Shop</h2>
+            <p class="mb-6 font-bold text-lg">Spend your hard-earned ⭐ to customize your experience!</p>
+
+            <h3 class="fun-font text-2xl text-left pl-4 mb-4 border-b-4 border-gray-300 pb-2">Avatar Cosmetics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 mb-8">
+                <!-- Lab Coat -->
+                <div class="bg-gray-100 border-4 border-white p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🥼</div>
+                        <h3 class="fun-font text-lg mb-2">Lab Coat</h3>
+                        <p class="text-sm mb-4">PhD essential outfit.</p>
+                    </div>
+                    <button id="btn-shop-outfit-labcoat" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('outfit', 'outfit_labcoat', 15)">Buy (15 ⭐)</button>
+                </div>
+                <!-- MIB Suit -->
+                <div class="bg-gray-100 border-4 border-black p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🕴️</div>
+                        <h3 class="fun-font text-lg mb-2">MIB Suit</h3>
+                        <p class="text-sm mb-4">Top secret cyber gear.</p>
+                    </div>
+                    <button id="btn-shop-outfit-suit" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('outfit', 'outfit_suit', 20)">Buy (20 ⭐)</button>
+                </div>
+                <!-- Nerd Glasses -->
+                <div class="bg-gray-100 border-4 border-blue-400 p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">👓</div>
+                        <h3 class="fun-font text-lg mb-2">Nerd Glasses</h3>
+                        <p class="text-sm mb-4">+10 to intelligence.</p>
+                    </div>
+                    <button id="btn-shop-acc-glasses" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('accessory', 'acc_glasses', 10)">Buy (10 ⭐)</button>
+                </div>
+                <!-- Cyber Visor -->
+                <div class="bg-gray-100 border-4 border-neon-green p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🥽</div>
+                        <h3 class="fun-font text-lg mb-2">Cyber Visor</h3>
+                        <p class="text-sm mb-4">Jack into the matrix.</p>
+                    </div>
+                    <button id="btn-shop-acc-visor" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('accessory', 'acc_visor', 15)">Buy (15 ⭐)</button>
+                </div>
+            </div>
+
+            <h3 class="fun-font text-2xl text-left pl-4 mb-4 border-b-4 border-gray-300 pb-2">Themes & Cursors</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+                <div class="bg-gray-100 border-4 border-yellow-400 p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🪄</div>
+                        <h3 class="fun-font text-lg mb-2">Magic Cursor</h3>
+                        <p class="text-sm mb-4">Golden wand pointer.</p>
+                    </div>
+                    <button id="btn-shop-cursor-wand" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('cursor', 'cursor_wand', 5)">Buy (5 ⭐)</button>
+                </div>
+                <div class="bg-gray-100 border-4 border-green-500 p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🛸</div>
+                        <h3 class="fun-font text-lg mb-2">Alien Cursor</h3>
+                        <p class="text-sm mb-4">Extraterrestrial pointer.</p>
+                    </div>
+                    <button id="btn-shop-cursor-alien" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('cursor', 'cursor_alien', 10)">Buy (10 ⭐)</button>
+                </div>
+                <div class="bg-gray-100 border-4 border-purple-500 p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🕶️</div>
+                        <h3 class="fun-font text-lg mb-2">Matrix Theme</h3>
+                        <p class="text-sm mb-4">Hack the visual theme.</p>
+                    </div>
+                    <button id="btn-shop-theme-matrix" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('theme', 'theme_matrix', 15)">Buy (15 ⭐)</button>
+                </div>
+                <div class="bg-gray-100 border-4 border-pink-500 p-4 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="text-4xl mb-2">🌇</div>
+                        <h3 class="fun-font text-lg mb-2">Neon Theme</h3>
+                        <p class="text-sm mb-4">Synthwave aesthetic.</p>
+                    </div>
+                    <button id="btn-shop-theme-neon" class="action-btn !bg-yellow-500 !text-black w-full"
+                        onclick="window.handleShopItem('theme', 'theme_neon', 20)">Buy (20 ⭐)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: MEGA QUIZ INTERFACE                  -->
+        <!-- ========================================== -->
+        <div id="view-mega-quiz" class="app-view max-w-3xl mx-auto w-full">
+            <div class="flex justify-between items-center mb-4">
+                <button class="nav-btn !mb-0" onclick="window.quitMegaQuiz()">⬅️ Quit</button>
+                <div class="font-bold text-xl fun-font bg-white px-4 py-2 border-4 border-gray-800 rounded-xl">Question
+                    <span id="quiz-progress-text">1/5</span>
+                </div>
+            </div>
+            <div class="quiz-progress-bar">
+                <div id="quiz-progress-fill" class="quiz-progress-fill" style="width: 20%;"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border-8 border-blue-500 shadow-xl mb-6 relative overflow-hidden"
+                id="mega-quiz-container">
+                <!-- Content generated via JS -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: GENETICS EXPLORER & PHD MODE         -->
+        <!-- ========================================== -->
+        <div id="view-genetics" class="app-view">
+            <div class="flex justify-between">
+                <button class="nav-btn" onclick="window.switchView('view-hub')">⬅️ Back to Hub</button>
+                <button id="phd-toggle-btn" class="nav-btn !bg-indigo-800 !text-yellow-400 !border-yellow-400 hidden"
+                    onclick="window.togglePhDMode()">🎓 Enter PhD Mode</button>
+                <button id="normal-toggle-btn" class="nav-btn !bg-blue-500 !text-white hidden"
+                    onclick="window.togglePhDMode()">🔙 Undergrad Basics</button>
+            </div>
+
+            <!-- NORMAL GENETICS -->
+            <div id="genetics-normal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 mt-4">
+                    <div class="chunky-card card-red" onclick="window.openNotebook('genetics', 'genetics')">
+                        <div class="card-icon">🧬</div>
+                        <h2>DNA Decode</h2>
+                    </div>
+                    <div class="chunky-card card-green" onclick="window.openNotebook('genetics', 'metabolism')">
+                        <div class="card-icon">⚡</div>
+                        <h2>Energy Factory</h2>
+                    </div>
+                    <div class="chunky-card card-purple" onclick="window.openNotebook('genetics', 'stats')">
+                        <div class="card-icon">📊</div>
+                        <h2>Math Mountain</h2>
+                    </div>
+                    <div class="chunky-card card-orange" onclick="window.openNotebook('genetics', 'ml')">
+                        <div class="card-icon">🤖</div>
+                        <h2>Robot Brains</h2>
+                    </div>
+                    <div class="chunky-card card-blue md:col-span-2"
+                        onclick="window.openNotebook('genetics', 'lab_rats')">
+                        <div class="card-icon">🐁</div>
+                        <h2>Lab Rats: Breeding Sim</h2>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" onclick="window.startBoss('genetics')">
+                        <div class="card-icon">👾</div>
+                        <h2>FINAL BOSS: The Mutation Monster</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHD GENETICS -->
+            <div id="genetics-phd" class="hidden">
+                <div
+                    class="bg-indigo-900 text-yellow-400 font-bold p-3 text-center rounded-xl mt-2 mb-6 border-4 border-yellow-400 text-2xl uppercase tracking-widest shadow-lg">
+                    🎓 PhD Mode Activated 🎓</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+                    <div class="chunky-card card-phd" onclick="window.openNotebook('phd_genetics', 'crispr')">
+                        <div class="card-icon">✂️</div>
+                        <h2>CRISPR-Cas9</h2>
+                        <p class="text-sm text-yellow-200 font-bold">Gene Editing</p>
+                    </div>
+                    <div class="chunky-card card-phd" onclick="window.openNotebook('phd_genetics', 'gwas')">
+                        <div class="card-icon">🗺️</div>
+                        <h2>GWAS</h2>
+                        <p class="text-sm text-yellow-200 font-bold">Population Stats</p>
+                    </div>
+                    <div class="chunky-card card-phd" onclick="window.openNotebook('phd_genetics', 'transcriptomics')">
+                        <div class="card-icon">📉</div>
+                        <h2>Transcriptomics</h2>
+                        <p class="text-sm text-yellow-200 font-bold">RNA Expression</p>
+                    </div>
+                    <div class="chunky-card card-phd" onclick="window.openNotebook('phd_genetics', 'phd_rats')">
+                        <div class="card-icon">🧫</div>
+                        <h2>Adv. Lab Rats</h2>
+                        <p class="text-sm text-yellow-200 font-bold">Gene Knockouts</p>
+                    </div>
+                    <div class="chunky-card card-quiz md:col-span-2" onclick="window.startMegaQuiz('genetics')">
+                        <div class="card-icon">📝</div>
+                        <h2>Genetics Mega Quiz</h2>
+                        <p class="font-bold">Test your knowledge & earn XP!</p>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" style="border-color:#ffd54f; color:#ffd54f;"
+                        onclick="window.startBoss('phd_genetics')">
+                        <div class="card-icon">📜</div>
+                        <h2>DISSERTATION DEFENSE: Reviewer #2</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: CYBERSECURITY EXPLORER & MASTERS MODE-->
+        <!-- ========================================== -->
+        <div id="view-cyber" class="app-view">
+            <div class="flex justify-between">
+                <button class="nav-btn" onclick="window.switchView('view-hub')">⬅️ Back to Hub</button>
+                <button id="master-toggle-btn" class="nav-btn !bg-red-900 !text-neon-green !border-neon-green hidden"
+                    onclick="window.toggleMasterMode()">🥷 Enter Masters Mode</button>
+                <button id="normal-cyber-toggle-btn" class="nav-btn !bg-blue-500 !text-white hidden"
+                    onclick="window.toggleMasterMode()">🔙 Script Kiddie</button>
+            </div>
+
+            <!-- NORMAL CYBER -->
+            <div id="cyber-normal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 mt-4">
+                    <div class="chunky-card card-cyber" style="background-color: #2c3e50;"
+                        onclick="window.openNotebook('cyber', 'phishing')">
+                        <div class="card-icon">🎣</div>
+                        <h2>Phishing Pond</h2>
+                    </div>
+                    <div class="chunky-card card-cyber" style="background-color: #8e44ad;"
+                        onclick="window.openNotebook('cyber', 'crypto')">
+                        <div class="card-icon">🗝️</div>
+                        <h2>Crypto Castle</h2>
+                    </div>
+                    <div class="chunky-card card-cyber" style="background-color: #c0392b;"
+                        onclick="window.openNotebook('cyber', 'malware')">
+                        <div class="card-icon">🦠</div>
+                        <h2>Malware Maze</h2>
+                    </div>
+                    <div class="chunky-card card-cyber" style="background-color: #2980b9;"
+                        onclick="window.openNotebook('cyber', 'network')">
+                        <div class="card-icon">🌐</div>
+                        <h2>Network Nexus</h2>
+                    </div>
+                    <div class="chunky-card card-cyber md:col-span-2" style="background-color: #0a3d24;"
+                        onclick="window.openNotebook('cyber', 'sandbox')">
+                        <div class="card-icon">🥷</div>
+                        <h2>Hacker Sim</h2>
+                        <p class="font-bold text-lg">Attack Sandbox</p>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" onclick="window.startBoss('cyber')">
+                        <div class="card-icon">👾</div>
+                        <h2>FINAL BOSS: The Master Hacker</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MASTER CYBER -->
+            <div id="cyber-master" class="hidden">
+                <div
+                    class="bg-black text-neon-green font-bold p-3 text-center rounded-xl mt-2 mb-6 border-4 border-neon-green text-2xl uppercase tracking-widest shadow-lg">
+                    🥷 Masters Mode Activated 🥷</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+                    <div class="chunky-card card-master" onclick="window.openNotebook('master_cyber', 'zero_day')">
+                        <div class="card-icon">💥</div>
+                        <h2>0-Day Dev</h2>
+                        <p>Exploitation</p>
+                    </div>
+                    <div class="chunky-card card-master" onclick="window.openNotebook('master_cyber', 'reverse')">
+                        <div class="card-icon">🔄</div>
+                        <h2>Reverse Eng</h2>
+                        <p>Decompiling</p>
+                    </div>
+                    <div class="chunky-card card-master" onclick="window.openNotebook('master_cyber', 'soc')">
+                        <div class="card-icon">👁️</div>
+                        <h2>SOC Analyst</h2>
+                        <p>Threat Hunting</p>
+                    </div>
+                    <div class="chunky-card card-master" onclick="window.openNotebook('master_cyber', 'crypto_adv')">
+                        <div class="card-icon">🧮</div>
+                        <h2>Adv Crypto</h2>
+                        <p>Quantum Sec</p>
+                    </div>
+                    <div class="chunky-card card-quiz md:col-span-2"
+                        style="background-color: #d35400; border-color: #fff;" onclick="window.startMegaQuiz('cyber')">
+                        <div class="card-icon">📝</div>
+                        <h2>Cyber Mega Quiz</h2>
+                        <p class="font-bold text-white">Test your knowledge & earn XP!</p>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" style="border-color:#39ff14; color:#39ff14;"
+                        onclick="window.startBoss('master_cyber')">
+                        <div class="card-icon">💀</div>
+                        <h2>DEFEND THE NETWORK: The APT</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: MICROBIOME WORLD                     -->
+        <!-- ========================================== -->
+        <div id="view-microbiome" class="app-view">
+            <button class="nav-btn" onclick="window.switchView('view-hub')">⬅️ Back to Hub</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 mt-4">
+                <div class="chunky-card card-green" onclick="window.openNotebook('microbiome', 'bacteria')">
+                    <div class="card-icon">🧫</div>
+                    <h2>Bacteria Basics</h2>
+                </div>
+                <div class="chunky-card card-purple" onclick="window.openNotebook('microbiome', 'viruses')">
+                    <div class="card-icon">🦠</div>
+                    <h2>Virus Vault</h2>
+                </div>
+                <div class="chunky-card card-orange" onclick="window.openNotebook('microbiome', 'fungi')">
+                    <div class="card-icon">🍄</div>
+                    <h2>Fungi Forest</h2>
+                </div>
+                <div class="chunky-card card-red" onclick="window.openNotebook('microbiome', 'immune')">
+                    <div class="card-icon">🛡️</div>
+                    <h2>Immune Defense</h2>
+                </div>
+                <div class="chunky-card card-green md:col-span-2" style="background-color: #1b5e20;"
+                    onclick="window.openNotebook('microbiome', 'outbreak')">
+                    <div class="card-icon">🩺</div>
+                    <h2>Outbreak Sim</h2>
+                    <p class="font-bold text-lg text-green-200">Cure the Patient</p>
+                </div>
+                <div class="chunky-card card-boss md:col-span-2" onclick="window.startBoss('microbiome')">
+                    <div class="card-icon">👾</div>
+                    <h2>FINAL BOSS: The Superbug</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW: DATA DASH (TABS FOR SQL, PY, R)      -->
+        <!-- ========================================== -->
+        <div id="view-data" class="app-view">
+            <button class="nav-btn" onclick="window.switchView('view-hub')">⬅️ Back to Hub</button>
+            <div class="flex justify-center gap-2 md:gap-4 my-4 flex-wrap">
+                <button id="tab-btn-sql" class="action-btn data-tab-btn active !bg-teal-600 !text-xl !px-6"
+                    onclick="window.switchDataTab('sql')">🗄️ SQL</button>
+                <button id="tab-btn-python" class="action-btn data-tab-btn !bg-py-blue text-yellow-400 !text-xl !px-6"
+                    onclick="window.switchDataTab('python')">🐍 Python</button>
+                <button id="tab-btn-r" class="action-btn data-tab-btn !bg-blue-600 !text-xl !px-6"
+                    onclick="window.switchDataTab('r')">📉 R Lang</button>
+            </div>
+
+            <!-- SQL Tab -->
+            <div id="data-tab-sql" class="data-tab-content active">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+                    <div class="chunky-card card-teal" onclick="window.openNotebook('data_sql', 'queries')">
+                        <div class="card-icon">🔍</div>
+                        <h2>Basic Queries</h2>
+                    </div>
+                    <div class="chunky-card card-teal" onclick="window.openNotebook('data_sql', 'joins')">
+                        <div class="card-icon">🔗</div>
+                        <h2>Table Joins</h2>
+                    </div>
+                    <div class="chunky-card card-teal" onclick="window.openNotebook('data_sql', 'agg')">
+                        <div class="card-icon">➕</div>
+                        <h2>Aggregations</h2>
+                    </div>
+                    <div class="chunky-card card-teal" onclick="window.openNotebook('data_sql', 'clean')">
+                        <div class="card-icon">🧹</div>
+                        <h2>Data Cleaning</h2>
+                    </div>
+                    <div class="chunky-card card-teal md:col-span-2" style="background-color: #004d40;"
+                        onclick="window.openNotebook('data_sql', 'detective')">
+                        <div class="card-icon">🕵️</div>
+                        <h2>SQL Detective</h2>
+                        <p class="font-bold text-lg text-teal-200">Query Sandbox</p>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" onclick="window.startBoss('data_sql')">
+                        <div class="card-icon">👾</div>
+                        <h2>FINAL BOSS: The Corrupt Table</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Python Tab -->
+            <div id="data-tab-python" class="data-tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+                    <div class="chunky-card card-python" onclick="window.openNotebook('data_python', 'vars')">
+                        <div class="card-icon">📦</div>
+                        <h2>Variable Vault</h2>
+                    </div>
+                    <div class="chunky-card card-python" onclick="window.openNotebook('data_python', 'loops')">
+                        <div class="card-icon">🔁</div>
+                        <h2>Looping Lanes</h2>
+                    </div>
+                    <div class="chunky-card card-python" onclick="window.openNotebook('data_python', 'funcs')">
+                        <div class="card-icon">⚙️</div>
+                        <h2>Function Factory</h2>
+                    </div>
+                    <div class="chunky-card card-python" onclick="window.openNotebook('data_python', 'lists')">
+                        <div class="card-icon">📋</div>
+                        <h2>List Library</h2>
+                    </div>
+                    <div class="chunky-card card-python md:col-span-2" style="background-color: #1a237e;"
+                        onclick="window.openNotebook('data_python', 'builder')">
+                        <div class="card-icon">🧩</div>
+                        <h2>Logic Lab</h2>
+                        <p class="font-bold text-lg text-blue-200">Algorithm Sandbox</p>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" onclick="window.startBoss('data_python')">
+                        <div class="card-icon">👾</div>
+                        <h2>FINAL BOSS: The Infinite Loop</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- R Tab -->
+            <div id="data-tab-r" class="data-tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+                    <div class="chunky-card card-blue" onclick="window.openNotebook('data_r', 'dfs')">
+                        <div class="card-icon">📊</div>
+                        <h2>DataFrames</h2>
+                    </div>
+                    <div class="chunky-card card-blue" onclick="window.openNotebook('data_r', 'viz')">
+                        <div class="card-icon">📈</div>
+                        <h2>Visualizations</h2>
+                    </div>
+                    <div class="chunky-card card-blue" onclick="window.openNotebook('data_r', 'stats')">
+                        <div class="card-icon">🧮</div>
+                        <h2>Distributions</h2>
+                    </div>
+                    <div class="chunky-card card-blue" onclick="window.openNotebook('data_r', 'console')">
+                        <div class="card-icon">💻</div>
+                        <h2>R Console</h2>
+                    </div>
+                    <div class="chunky-card card-blue md:col-span-2" style="background-color: #01579b;"
+                        onclick="window.openNotebook('data_r', 'pipeline')">
+                        <div class="card-icon">📉</div>
+                        <h2>R Pipeline</h2>
+                        <p class="font-bold text-lg text-blue-200">Viz Sandbox</p>
+                    </div>
+                    <div class="chunky-card card-boss md:col-span-2" onclick="window.startBoss('data_r')">
+                        <div class="card-icon">👾</div>
+                        <h2>FINAL BOSS: The NA Monster</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modals -->
+    <div class="overlay" id="overlay" onclick="window.closeModals()"></div>
+
+    <div class="notebook-modal" id="notebook-modal">
+        <button class="close-btn" onclick="window.closeModals()">X</button>
+        <div class="notebook-content" id="notebook-content"></div>
+    </div>
+
+    <div class="generic-modal" id="settings-modal">
+        <button class="close-btn" onclick="window.closeModals()">X</button>
+        <h2 class="fun-font text-3xl mb-6">⚙️ Settings</h2>
+        <div class="flex items-center justify-between bg-gray-100 p-4 rounded-xl border-2 border-gray-300 mb-4">
+            <span class="font-bold text-lg">Sound Effects</span>
+            <button id="sound-toggle" class="action-btn !bg-green-500" onclick="window.toggleSound()">🔊 ON</button>
+        </div>
+        <div class="bg-red-100 p-4 rounded-xl border-2 border-red-300 mt-8">
+            <p class="font-bold text-red-600 mb-2">Danger Zone</p>
+            <button class="action-btn !bg-red-600 w-full" onclick="window.resetProgress()">🗑️ Reset All
+                Progress</button>
+        </div>
+    </div>
+
+    <div class="generic-modal" id="trophy-modal">
+        <button class="close-btn" onclick="window.closeModals()">X</button>
+        <h2 class="fun-font text-3xl mb-6 text-yellow-500" style="text-shadow: 2px 2px 0 #333;">🏆 Profile & Trophies
+        </h2>
+        <div
+            class="bg-gray-100 p-4 rounded-xl border-2 border-gray-300 mb-6 flex items-center justify-center gap-4 text-left">
+            <div id="profile-avatar-display"
+                class="text-6xl bg-white border-4 border-gray-800 rounded-full p-2 shadow-md flex items-center justify-center min-w-[100px] min-h-[100px] text-center tracking-tighter overflow-hidden">
+                👨🏻</div>
+            <div>
+                <h3 id="profile-name-display" class="font-bold text-2xl fun-font text-blue-600">Player</h3>
+                <p id="profile-rank-display" class="font-bold text-gray-700">Rank: Space Cadet</p>
+                <p id="profile-xp-display" class="font-bold text-green-600">Total XP: 0</p>
+                <button class="action-btn !bg-red-500 !text-sm !py-1 !px-3 mt-2 !ml-0" onclick="window.signOut()">🚪
+                    Sign Out / Restart</button>
+            </div>
+        </div>
+        <p class="mb-4 font-bold text-left border-b-2 pb-2">Unlocked Badges:</p>
+        <div id="trophy-list" class="flex flex-col gap-3"></div>
+    </div>
+
+    <div class="generic-modal" id="boss-modal">
+        <button class="close-btn" onclick="window.closeModals()">X</button>
+        <h2 id="boss-title" class="fun-font text-3xl mb-2 text-red-600">👾 Boss Battle</h2>
+        <p id="boss-desc" class="mb-6 font-bold">Answer 3 questions correctly to defeat the boss!</p>
+        <div class="bg-gray-100 p-6 rounded-xl border-4 border-gray-800 text-left">
+            <p id="boss-q" class="font-bold text-xl mb-4"></p>
+            <div id="boss-opts" class="flex flex-col gap-2"></div>
+        </div>
+        <p id="boss-feedback" class="font-bold text-xl mt-4 hidden"></p>
+    </div>
+
+    <!-- Custom Alert/Confirm Modal for Shop & Reset -->
+    <div class="generic-modal" id="custom-alert-modal" style="z-index: 2000;">
+        <button class="close-btn" onclick="window.closeAlert()">X</button>
+        <h2 class="fun-font text-3xl mb-4 text-blue-600" id="alert-title">Notice</h2>
+        <p id="alert-message" class="mb-6 font-bold text-lg text-gray-800"></p>
+        <div class="flex justify-center gap-4">
+            <button class="action-btn !bg-blue-500 w-full" id="alert-ok-btn" onclick="window.closeAlert()">OK</button>
+            <button class="action-btn !bg-gray-500 w-full hidden" id="alert-cancel-btn"
+                onclick="window.closeAlert()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // ALL GLOBAL STATE AND DATABASES ATTACHED DIRECTLY TO WINDOW TO PREVENT SCOPE ERRORS
+        window.dTarget = ""; window.mazeLayout = []; window.px = 0; window.py = 0; window.loopCount = 0; window.dynVars = {};
+
+        // --- MEGA QUIZ QUESTION DATABASE ---
+        window.megaQuizDB = {
+            genetics: [
+                ["What does the central dogma of molecular biology describe?", ["How cells divide", "Flow of info from DNA to RNA to protein", "Inheritance of traits", "Cell membrane structure"], 1],
+                ["A person who has two identical alleles for a gene is described as:", ["Heterozygous", "Dominant", "Homozygous", "Recessive"], 2],
+                ["Approximately what percentage of the human genome codes for proteins?", ["50%", "25%", "2%", "75%"], 2],
+                ["How many pairs of chromosomes does a typical human cell contain?", ["46 pairs", "23 pairs", "23 individual", "46 individual"], 1],
+                ["Which tool allows scientists to make precise cuts and edits to DNA sequences?", ["PCR", "Western blotting", "CRISPR-Cas9", "RNA-seq"], 2],
+                ["A SNP is best defined as:", ["A deletion of a chromosome", "A single-letter difference in DNA sequence", "A change in gene expression", "A duplication of a gene segment"], 1],
+                ["Epigenetic changes are best described as:", ["Mutations in the coding sequence", "Changes in chromosome number", "Heritable changes in gene expression not altering DNA sequence", "Random replication errors"], 2],
+                ["Which of the following is NOT a component of multi-omics?", ["Transcriptomics", "Proteomics", "Radiomics", "Metabolomics"], 2],
+                ["Transcriptomics studies:", ["All proteins in a cell", "Which genes are transcribed into RNA", "Small-molecule metabolic products", "Structural variants"], 1],
+                ["In a GWAS, the primary statistical unit tested for association is:", ["An entire chromosome", "A single nucleotide polymorphism (SNP)", "A protein isoform", "A metabolic pathway"], 1],
+                ["Linkage disequilibrium (LD) refers to:", ["Genes co-segregating", "Non-random association of alleles at different positions", "Linkage of a gene to a disease", "Equilibrium state of alleles"], 1],
+                ["What is the significance of LD in GWAS?", ["Cheaper sequencing", "A significant SNP may just 'tag' a nearby causal variant", "Eliminates multiple testing", "Proves SNP is functional"], 1],
+                ["In CRISPR-Cas9, what role does the guide RNA (gRNA) play?", ["Encodes Cas9", "Directs Cas9 to target DNA via complementary pairing", "Repairs double-strand break", "Methylates the cut site"], 1],
+                ["Heterozygosity at a locus is expected to be highest in populations with:", ["Recent bottlenecks", "Strong positive selection", "Large effective population sizes (e.g., African)", "High inbreeding"], 2],
+                ["What is 'regulatory DNA'?", ["Codes for transcription factors", "Non-coding DNA controlling when/where genes are expressed", "Repetitive satellite sequences", "Mitochondrial DNA"], 1],
+                ["Which of the following vitamins is fat-soluble?", ["Vitamin C", "Vitamin B12", "Vitamin D", "Folate"], 2],
+                ["Why can fat-soluble vitamins be toxic at high doses?", ["Blocks enzymes", "Stored in body tissues and accumulate", "Converted to harmful metabolites", "Competes with water-soluble"], 1],
+                ["Niacin (B3) is a precursor to which molecule?", ["FAD", "ATP", "NAD+", "CoA"], 2],
+                ["Riboflavin (B2) is a precursor to:", ["NADH", "FAD", "Acetyl-CoA", "GTP"], 1],
+                ["The field of nutrigenomics studies:", ["Diet and gut microbiome", "How genetic variants affect individual responses to nutrients", "Metabolic conversion to energy", "Epigenetic marks"], 1],
+                ["Vitamin B12 and folate are both critical for:", ["Oxidative phosphorylation", "One-carbon metabolism and DNA methylation", "Gluconeogenesis", "Beta-oxidation"], 1],
+                ["Glycolysis converts glucose into which molecule?", ["Acetyl-CoA", "Pyruvate", "Lactate", "Oxaloacetate"], 1],
+                ["Where does the TCA cycle take place?", ["Nucleus", "Cytoplasm", "Mitochondria", "Endoplasmic reticulum"], 2],
+                ["ATP is the 'energy currency' because:", ["Stores genetic info", "Hydrolysis releases energy for cellular processes", "Most abundant molecule", "Directly builds proteins"], 1],
+                ["NADH and FADH2 from the TCA cycle are used primarily in:", ["Glycolysis", "Urea cycle", "Oxidative phosphorylation", "Fatty acid synthesis"], 2],
+                ["Phenylketonuria (PKU) is caused by:", ["Insulin deficiency", "PAH gene loss-of-function variants", "Overproduction of tyrosine", "Trisomy 12"], 1],
+                ["Flux analysis in metabolomics measures:", ["Number of SNPs", "Rate material flows through metabolic pathways", "Expression levels", "Enzyme structure"], 1],
+                ["One-carbon metabolism directly influences:", ["Glycogen storage", "DNA methylation patterns and nucleotide synthesis", "Mitochondrial potential", "Cholesterol biosynthesis"], 1],
+                ["The main goal of supervised machine learning is:", ["Find hidden clusters", "Train a model on labeled examples to predict outcomes", "Reduce variables", "Generate synthetic data"], 1],
+                ["In a GWAS, logistic regression is typically used when the trait is:", ["Continuous", "Binary (disease vs no disease)", "Time-to-event", "Count data"], 1],
+                ["PCA is used in genomics primarily to:", ["Identify SNP function", "Control for population stratification", "Determine LD", "Estimate heritability"], 1],
+                ["Overfitting in a machine learning model refers to:", ["Too few features", "Performing well on training data but poorly on unseen data", "Too simple", "Inappropriate loss function"], 1],
+                ["A Polygenic Risk Score (PRS) is constructed by:", ["Sequencing the genome", "Aggregating many small-effect SNPs weighted by effect size", "Neural networks", "Measuring gene expression"], 1],
+                ["A p-value of 0.03 means:", ["3% chance alt hypothesis is true", "3% chance of observing results this extreme if null is true", "Effect size is 3%", "97% power"], 1],
+                ["Standard threshold for genome-wide significance is:", ["p < 0.05", "p < 0.01", "p < 5x10^-8", "p < 0.001"], 2],
+                ["The Bonferroni correction adjusts the threshold by:", ["Multiplying p-value", "Dividing desired alpha by the number of tests performed", "Log transformation", "Removing low MAF SNPs"], 1],
+                ["An odds ratio of 1.5 means:", ["50% less likely", "1.5 times the odds of developing the disease", "50% of cases carry it", "Increases risk by 1.5%"], 1],
+                ["Heritability (h2) represents:", ["Probability passed to child", "Proportion of phenotypic variance attributable to genetics", "Number of genes", "Single gene vs many"], 1],
+                ["Meta-analysis in genetics is used primarily to:", ["Replicate in single cohort", "Combine results from multiple studies to increase power", "Correct stratification", "Determine causal direction"], 1],
+                ["PCR is used in the lab to:", ["Determine protein structure", "Amplify specific DNA sequences", "Measure protein levels", "Edit DNA sequences"], 1],
+                ["A negative control is used to:", ["Confirm positive result", "Confirm that no effect is observed when no treatment is applied", "Maximize signal", "Calibrate instrument"], 1],
+                ["Western blotting is used to:", ["Amplify DNA", "Sequence RNA", "Detect and quantify specific proteins using antibodies", "Measure gene expression"], 2],
+                ["In RNA-seq, raw output reads represent:", ["Protein sequences", "Short sequenced fragments of RNA converted to cDNA", "SNP genotypes", "Methylation states"], 1],
+                ["Differential expression analysis tests for:", ["Mutated genes", "Genes whose RNA abundance is significantly different", "Epigenetic changes", "Alternative splicing"], 1],
+                ["ChIP-seq is used to:", ["Quantify RNA", "Map genome-wide binding sites of proteins", "Detect structural variants", "Measure protein abundance"], 1],
+                ["Why is reproducibility emphasized in genomics?", ["Larger datasets", "Many published findings failed to replicate, eroding confidence", "Sequencing is cheap", "Required by agencies"], 1],
+                ["What distinguishes GWAS from candidate gene studies?", ["Family vs population", "GWAS tests across the whole genome without prior hypotheses", "Whole-genome vs arrays", "Rare vs common variants"], 1],
+                ["Allele frequency refers to:", ["How often an allele causes a phenotype", "Proportion of chromosomes carrying a specific allele", "Mutation rate", "Transmission probability"], 1],
+                ["DNA methylation most commonly occurs at:", ["Adenine", "Cytosine residues, particularly at CpG dinucleotides", "Thymine", "Guanine"], 1],
+                ["Histone modification affects gene expression by:", ["Altering DNA sequence", "Changing chromatin compaction to regulate DNA accessibility", "Editing mRNA", "Double-strand breaks"], 1]
+            ],
+            cyber: [
+                ["What is the main goal of cybersecurity?", ["Make computers faster", "Protect information and systems from harm", "Sell more software", "Replace human workers"], 1],
+                ["What is malware?", ["A strong password", "Any software designed to cause harm", "A hardware upgrade", "A backup file"], 1],
+                ["Why should people use strong passwords?", ["Easier to remember", "Websites load faster", "Harder for attackers to guess", "Required by all sites"], 2],
+                ["What is phishing?", ["Testing internet speed", "Sending fake messages to trick people into giving info", "Encrypting data", "Blocking ads"], 1],
+                ["What is the main purpose of antivirus software?", ["Create backups", "Scan for and remove malicious software", "Speed up internet", "Manage user accounts"], 1],
+                ["What does multi-factor authentication do?", ["Log in without passwords", "Uses 2+ verification methods to confirm identity", "Blocks external traffic", "Encrypts files"], 1],
+                ["What is a firewall?", ["Physical wall in data center", "Device or software that filters network traffic", "A type of malware", "Backup system"], 1],
+                ["In the CIA triad, what does 'confidentiality' mean?", ["Systems are always on", "Data is accurate", "Data is accessible only to authorized users", "Data is backed up"], 2],
+                ["In the CIA triad, what does 'integrity' mean?", ["Data is encrypted", "Data is not altered without authorization", "Data is shared publicly", "Data is always available"], 1],
+                ["What is the main benefit of encrypting data?", ["Compresses data", "Makes data colorful", "Prevents unauthorized parties from reading data", "Deletes old data"], 2],
+                ["What is a brute-force attack?", ["Guessing every possible password or key", "Sending fake emails", "Listening to network traffic", "Exploiting a software update"], 0],
+                ["What is a dictionary attack?", ["Translating messages", "Trying passwords from a list of common words", "Encrypting with wordlist", "Blocking bad words"], 1],
+                ["What is ransomware?", ["Steals data silently", "Locks data and demands payment", "Backs up files", "A type of antivirus"], 1],
+                ["What is social engineering?", ["Designing safe buildings", "Using math to encrypt data", "Tricking people into giving away information or access", "Scanning networks"], 2],
+                ["What does 'least privilege' mean?", ["Full access default", "Denied all access", "Users get only the minimum access they need", "Only managers get access"], 2],
+                ["Difference between authentication and authorization?", ["They are the same", "Authentication is proving identity; authorization is what you're allowed to do", "Reverse of B", "Networks vs Data Centers"], 1],
+                ["What is a man-in-the-middle attack?", ["Physical access attack", "Attacker secretly intercepts communication between two parties", "Sending spam", "Stealing a device"], 1],
+                ["What is the main purpose of a backup?", ["Speed up apps", "Store copies of data to restore after loss", "Detect intruders", "Encrypt traffic"], 1],
+                ["What is an intrusion detection system (IDS)?", ["Fixes vulnerabilities", "Monitors and alerts on suspicious activity", "Blocks all traffic", "Stores logs only"], 1],
+                ["What is the principle of defense in depth?", ["One strong control", "Perimeter focus only", "Using multiple layers of security controls", "Outsourcing security"], 2],
+                ["Difference between symmetric and asymmetric encryption?", ["Text vs Images", "Symmetric uses one key; asymmetric uses public and private", "Slower vs faster", "No keys vs keys"], 1],
+                ["What is hashing primarily used for in security?", ["Compressing files", "Deleting data", "Fixed-size representation of data for integrity checks", "Increasing speed"], 2],
+                ["What is salting in password storage?", ["Storing plain text", "Adding random data to passwords before hashing", "Symmetric encryption", "Storing on USB"], 1],
+                ["What is a denial-of-service (DoS) attack?", ["Stealing credentials", "Encrypting data", "Making a service unavailable by overwhelming it with traffic", "Changing DNS"], 2],
+                ["What is the purpose of network segmentation?", ["Combine networks", "Slow down network", "Divide a network into smaller parts to limit attack spread", "Disable firewalls"], 2],
+                ["What is a zero-day vulnerability?", ["Patched years ago", "Known to vendor not attackers", "Publicly known and actively exploited before a patch exists", "Hardware only"], 2],
+                ["What is a SIEM system used for?", ["Backing up VMs", "Aggregating, correlating, and analyzing security event data", "Wireless internet", "Network topologies"], 1],
+                ["What is the main concept behind zero trust architecture?", ["Trust inside network", "Trust known IPs", "Never trust, always verify each user, device, and request", "Allow no auth"], 2],
+                ["In cloud security, what is the 'shared responsibility model'?", ["Customer is responsible", "Provider is responsible", "Responsibilities are divided between provider and customer", "No one responsible"], 2],
+                ["What is the main purpose of a vulnerability scan?", ["Exploit systems", "Identify potential weaknesses in systems and applications", "Guarantee safety", "Encrypt traffic"], 1]
+            ]
+        };
+
+        // --- SETTINGS & AUDIO SYSTEM ---
+        window.audioCtx = null;
+        window.soundEnabled = true;
+
+        try { if (localStorage.getItem('galaxySound') === 'false') window.soundEnabled = false; } catch (e) { console.warn("Local storage disabled."); }
+
+        window.initAudio = function () { if (!window.audioCtx && window.soundEnabled) window.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (window.audioCtx && window.audioCtx.state === 'suspended') window.audioCtx.resume(); }
+
+        window.toggleSound = function () {
+            window.soundEnabled = !window.soundEnabled;
+            try { localStorage.setItem('galaxySound', window.soundEnabled); } catch (e) { }
+            document.getElementById('sound-toggle').innerText = window.soundEnabled ? '🔊 ON' : '🔇 OFF';
+            document.getElementById('sound-toggle').className = window.soundEnabled ? 'action-btn !bg-green-500' : 'action-btn !bg-gray-500';
+        }
+
+        window.playSound = function (type) {
+            if (!window.soundEnabled) return;
+            window.initAudio();
+            if (!window.audioCtx) return;
+            const osc = window.audioCtx.createOscillator();
+            const gain = window.audioCtx.createGain();
+            osc.connect(gain); gain.connect(window.audioCtx.destination);
+
+            if (type === 'ding') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, window.audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1200, window.audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.3); osc.start(); osc.stop(window.audioCtx.currentTime + 0.3);
+            } else if (type === 'buzzer') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, window.audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.3, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.3); osc.start(); osc.stop(window.audioCtx.currentTime + 0.3);
+            } else if (type === 'bloop') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(400, window.audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(600, window.audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, window.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, window.audioCtx.currentTime + 0.1); osc.start(); osc.stop(window.audioCtx.currentTime + 0.1);
+            } else if (type === 'win') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(400, window.audioCtx.currentTime); osc.frequency.setValueAtTime(600, window.audioCtx.currentTime + 0.1); osc.frequency.setValueAtTime(800, window.audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, window.audioCtx.currentTime); gain.gain.linearRampToValueAtTime(0, window.audioCtx.currentTime + 0.4); osc.start(); osc.stop(window.audioCtx.currentTime + 0.4);
+            }
+        }
+
+        window.shootConfetti = function () {
+            const colors = ['#FF4B4B', '#00CC66', '#3399FF', '#FFEA00'];
+            for (let i = 0; i < 80; i++) {
+                let conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.width = (Math.random() * 10 + 5) + 'px';
+                conf.style.height = (Math.random() * 10 + 5) + 'px';
+                conf.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 3000);
+            }
+        }
+
+        // --- ALERTS & CONFIRMS ---
+        window.customAlert = function (msg, title = "Notice") {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = msg;
+            document.getElementById('alert-cancel-btn').classList.add('hidden');
+            document.getElementById('alert-ok-btn').innerText = "OK";
+            document.getElementById('alert-ok-btn').onclick = window.closeAlert;
+            document.getElementById('overlay').style.display = 'block'; document.getElementById('custom-alert-modal').style.display = 'block';
+        }
+
+        window.customConfirm = function (msg, callback) {
+            document.getElementById('alert-title').innerText = "Are you sure?";
+            document.getElementById('alert-message').innerText = msg;
+            document.getElementById('alert-cancel-btn').classList.remove('hidden');
+            document.getElementById('alert-ok-btn').innerText = "Yes, do it!";
+            document.getElementById('alert-ok-btn').onclick = () => { window.closeAlert(); callback(); };
+            document.getElementById('overlay').style.display = 'block'; document.getElementById('custom-alert-modal').style.display = 'block';
+        }
+
+        window.closeAlert = function () {
+            window.playSound('bloop'); document.getElementById('custom-alert-modal').style.display = 'none';
+            if (document.getElementById('settings-modal').style.display !== 'block' && document.getElementById('boss-modal').style.display !== 'block' && document.getElementById('notebook-modal').style.display !== 'block' && document.getElementById('trophy-modal').style.display !== 'block' && document.getElementById('onboarding-modal').style.display !== 'block') { document.getElementById('overlay').style.display = 'none'; }
+        }
+
+        // --- GAMIFICATION: STARS, XP, AVATAR & ACHIEVEMENTS ---
+        window.userProgress = {
+            name: '', baseAvatar: '👨🏻', stars: 0, xp: 0, completedKeys: [], unlocks: [], achievements: [], currentGeneticsMode: 'normal', currentCyberMode: 'normal',
+            equipped: { cursor: null, theme: null, outfit: null, accessory: null }
+        };
+
+        window.currentRankLevel = 0;
+
+        window.cosmeticMap = { outfit_labcoat: '🥼', outfit_suit: '🕴️', acc_glasses: '👓', acc_visor: '🥽' };
+
+        window.getRank = function (xp) {
+            if (xp >= 300) return { level: 3, name: "Universe Master" };
+            if (xp >= 150) return { level: 2, name: "Galaxy Brain" };
+            if (xp >= 50) return { level: 1, name: "Star Scholar" };
+            return { level: 0, name: "Space Cadet" };
+        }
+
+        window.achievementsList = {
+            first_star: { icon: "🌟", name: "First Steps", desc: "Earn your very first Star." },
+            big_spender: { icon: "💸", name: "Big Spender", desc: "Buy an item in the shop." },
+            bookworm: { icon: "📚", name: "Bookworm", desc: "Open 5 different notebooks." },
+            boss_slayer: { icon: "⚔️", name: "Boss Slayer", desc: "Defeat a Final Boss." },
+            flawless_boss: { icon: "👑", name: "Flawless Victory", desc: "Defeat a boss with 0 mistakes!" },
+            hacker: { icon: "💻", name: "System Hacker", desc: "Unlock a custom visual theme." },
+            microbiome_master: { icon: "🧫", name: "Germ Genius", desc: "Defeat The Superbug." },
+            phd_student: { icon: "🎓", name: "PhD Candidate", desc: "Unlock Genetics PhD Mode." },
+            master_hacker: { icon: "🥷", name: "Elite Threat", desc: "Unlock Cyber Masters Mode." }
+        };
+
+        window.loadProgress = function () {
+            try {
+                const saved = localStorage.getItem('galaxyProgress');
+                if (saved) {
+                    let parsed = JSON.parse(saved);
+                    window.userProgress = Object.assign(window.userProgress, parsed);
+                    if (!window.userProgress.equipped) window.userProgress.equipped = { cursor: null, theme: null, outfit: null, accessory: null };
+                    if (!window.userProgress.currentCyberMode) window.userProgress.currentCyberMode = 'normal';
+                }
+            } catch (e) { }
+
+            window.currentRankLevel = window.getRank(window.userProgress.xp).level;
+            document.getElementById('star-text').innerText = window.userProgress.stars;
+            window.updateRank();
+
+            document.getElementById('sound-toggle').innerText = window.soundEnabled ? '🔊 ON' : '🔇 OFF';
+            document.getElementById('sound-toggle').className = window.soundEnabled ? 'action-btn !bg-green-500' : 'action-btn !bg-gray-500';
+
+            window.applyUnlocks();
+            window.checkAchievements();
+
+            if (!window.userProgress.name) {
+                document.getElementById('onboarding-overlay').style.display = 'block';
+                document.getElementById('onboarding-modal').style.display = 'block';
+            } else {
+                window.updateAvatarDisplay();
+            }
+        }
+
+        window.tempBaseAvatar = '👨🏻';
+        window.selectBaseAvatar = function (el, emoji) {
+            window.playSound('bloop');
+            window.tempBaseAvatar = emoji;
+            document.querySelectorAll('#onboarding-modal .border-blue-500').forEach(e => {
+                e.classList.remove('border-blue-500');
+                e.classList.add('border-transparent');
+            });
+            el.classList.remove('border-transparent');
+            el.classList.add('border-blue-500');
+        }
+
+        window.finishOnboarding = function () {
+            const nameInput = document.getElementById('onboard-name').value.trim();
+            if (!nameInput) {
+                window.playSound('buzzer');
+                return alert("Please enter a name to begin your journey!");
+            }
+            window.playSound('win');
+            window.userProgress.name = nameInput;
+            window.userProgress.baseAvatar = window.tempBaseAvatar;
+            window.saveProgress();
+            window.updateAvatarDisplay();
+
+            document.getElementById('onboarding-overlay').style.display = 'none';
+            document.getElementById('onboarding-modal').style.display = 'none';
+            window.shootConfetti();
+        }
+
+        window.updateAvatarDisplay = function () {
+            let display = "";
+            if (window.userProgress.equipped.accessory) display += window.cosmeticMap[window.userProgress.equipped.accessory];
+            display += window.userProgress.baseAvatar || '👨🏻';
+            if (window.userProgress.equipped.outfit) display += window.cosmeticMap[window.userProgress.equipped.outfit];
+
+            document.getElementById('ui-avatar-display').innerText = display;
+            document.getElementById('profile-avatar-display').innerText = display;
+            document.getElementById('ui-player-name').innerText = window.userProgress.name || 'Player';
+            document.getElementById('profile-name-display').innerText = window.userProgress.name || 'Player';
+        }
+
+        window.applyUnlocks = function () {
+            document.body.classList.remove('cursor-wand', 'cursor-alien', 'matrix-override', 'neon-override');
+            if (window.userProgress.equipped.cursor === 'cursor_wand') document.body.classList.add('cursor-wand');
+            if (window.userProgress.equipped.cursor === 'cursor_alien') document.body.classList.add('cursor-alien');
+            if (window.userProgress.equipped.theme === 'theme_matrix') document.body.classList.add('matrix-override');
+            if (window.userProgress.equipped.theme === 'theme_neon') document.body.classList.add('neon-override');
+            window.updateAvatarDisplay();
+        }
+
+        window.saveProgress = function () {
+            try { localStorage.setItem('galaxyProgress', JSON.stringify(window.userProgress)); } catch (e) { }
+            window.checkLevelUp(); window.updateRank(); window.checkAchievements();
+        }
+
+        window.updateRank = function () {
+            const rank = window.getRank(window.userProgress.xp);
+            document.getElementById('rank-badge').innerText = `Rank: ${rank.name} (${window.userProgress.xp} XP)`;
+            const profileRank = document.getElementById('profile-rank-display');
+            if (profileRank) profileRank.innerText = `Rank: ${rank.name}`;
+            const profileXp = document.getElementById('profile-xp-display');
+            if (profileXp) profileXp.innerText = `Total XP: ${window.userProgress.xp}`;
+        }
+
+        window.checkLevelUp = function () {
+            const newRank = window.getRank(window.userProgress.xp);
+            if (newRank.level > window.currentRankLevel && window.currentRankLevel !== 0) {
+                setTimeout(() => {
+                    window.shootConfetti(); window.shootConfetti();
+                    window.playSound('win');
+                    setTimeout(() => window.playSound('win'), 500);
+                    window.customAlert(`Congratulations! You've been promoted to ${newRank.name}! Keep up the amazing work!`, "🎉 LEVEL UP! 🎉");
+                }, 500);
+            }
+            window.currentRankLevel = newRank.level;
+        }
+
+        window.checkAchievements = function () {
+            if (window.userProgress.stars > 0) window.unlockAchievement('first_star');
+            if (window.userProgress.unlocks.length > 0) window.unlockAchievement('big_spender');
+            if (window.userProgress.completedKeys.filter(k => k.startsWith('quiz_')).length >= 5) window.unlockAchievement('bookworm');
+            if (window.userProgress.completedKeys.some(k => k.startsWith('boss_'))) window.unlockAchievement('boss_slayer');
+            if (window.userProgress.unlocks.includes('theme_matrix') || window.userProgress.unlocks.includes('theme_neon')) window.unlockAchievement('hacker');
+            if (window.userProgress.completedKeys.includes('boss_microbiome')) window.unlockAchievement('microbiome_master');
+            if (window.userProgress.completedKeys.includes('boss_genetics')) window.unlockAchievement('phd_student');
+            if (window.userProgress.completedKeys.includes('boss_cyber')) window.unlockAchievement('master_hacker');
+        }
+
+        window.unlockAchievement = function (id) {
+            if (!window.userProgress.achievements.includes(id)) {
+                window.userProgress.achievements.push(id); window.saveProgress();
+                setTimeout(() => window.customAlert(`You earned the "${window.achievementsList[id].name}" badge!`, "🏆 Achievement Unlocked!"), 1000);
+            }
+        }
+
+        window.earnReward = function (key, starAmount = 1, xpAmount = 10) {
+            window.userProgress.xp += xpAmount;
+            if (!window.userProgress.completedKeys.includes(key)) {
+                window.userProgress.completedKeys.push(key); window.userProgress.stars += starAmount;
+                document.getElementById('star-text').innerText = window.userProgress.stars;
+                const counterUI = document.getElementById('star-counter');
+                counterUI.classList.remove('star-pop'); void counterUI.offsetWidth; counterUI.classList.add('star-pop');
+                window.playSound('win'); window.shootConfetti();
+            } else {
+                window.playSound('ding');
+            }
+            window.saveProgress();
+        }
+
+        // --- SHOP LOGIC ---
+        window.updateShopUI = function () {
+            const items = [
+                { id: 'cursor_wand', btn: 'btn-shop-cursor-wand', type: 'cursor', cost: 5 },
+                { id: 'cursor_alien', btn: 'btn-shop-cursor-alien', type: 'cursor', cost: 10 },
+                { id: 'theme_matrix', btn: 'btn-shop-theme-matrix', type: 'theme', cost: 15 },
+                { id: 'theme_neon', btn: 'btn-shop-theme-neon', type: 'theme', cost: 20 },
+                { id: 'outfit_labcoat', btn: 'btn-shop-outfit-labcoat', type: 'outfit', cost: 15 },
+                { id: 'outfit_suit', btn: 'btn-shop-outfit-suit', type: 'outfit', cost: 20 },
+                { id: 'acc_glasses', btn: 'btn-shop-acc-glasses', type: 'accessory', cost: 10 },
+                { id: 'acc_visor', btn: 'btn-shop-acc-visor', type: 'accessory', cost: 15 }
+            ];
+
+            items.forEach(item => {
+                const btn = document.getElementById(item.btn);
+                if (!btn) return;
+                if (window.userProgress.equipped[item.type] === item.id) {
+                    btn.className = "action-btn !bg-gray-500 !text-white w-full border-gray-700 shadow-none mt-auto";
+                    btn.innerText = "Unequip";
+                } else if (window.userProgress.unlocks.includes(item.id)) {
+                    btn.className = "action-btn !bg-green-500 !text-white w-full border-green-700 mt-auto";
+                    btn.innerText = "Equip";
+                } else {
+                    btn.className = "action-btn !bg-yellow-500 !text-black w-full border-yellow-700 mt-auto";
+                    btn.innerText = `Buy (${item.cost} ⭐)`;
+                }
+            });
+        }
+
+        window.handleShopItem = function (type, itemId, cost) {
+            if (window.userProgress.equipped[type] === itemId) {
+                window.playSound('bloop');
+                window.userProgress.equipped[type] = null;
+                window.applyUnlocks(); window.saveProgress(); window.updateShopUI();
+            } else if (window.userProgress.unlocks.includes(itemId)) {
+                window.playSound('ding');
+                window.userProgress.equipped[type] = itemId;
+                window.applyUnlocks(); window.saveProgress(); window.updateShopUI();
+            } else {
+                if (window.userProgress.stars >= cost) {
+                    window.playSound('win'); window.shootConfetti();
+                    window.userProgress.stars -= cost;
+                    window.userProgress.unlocks.push(itemId);
+                    window.userProgress.equipped[type] = itemId;
+                    document.getElementById('star-text').innerText = window.userProgress.stars;
+                    window.applyUnlocks(); window.saveProgress(); window.updateShopUI();
+                } else {
+                    window.playSound('buzzer');
+                    window.customAlert(`You need ${cost - window.userProgress.stars} more stars!`, "Not Enough Stars");
+                }
+            }
+        }
+
+        window.resetProgress = function () {
+            window.customConfirm("Are you sure? This deletes ALL stars, XP, unlocks, and your avatar!", () => {
+                try { localStorage.removeItem('galaxyProgress'); } catch (e) { } location.reload();
+            });
+        }
+
+        window.signOut = function () {
+            window.customConfirm("Are you sure you want to sign out? You will be returned to the character creation screen and start over.", () => {
+                try { localStorage.removeItem('galaxyProgress'); } catch (e) { } location.reload();
+            });
+        }
+
+        // --- NOTEBOOK & MODAL LOGIC ---
+        window.openNotebook = function (subject, topic) {
+            window.playSound('bloop');
+
+            // Retrieve the data for the specific tile
+            const data = window.databases[subject][topic];
+            if (!data) return;
+
+            const contentDiv = document.getElementById('notebook-content');
+            let html = `<h2>${data.title}</h2>${data.content}`;
+
+            // 1. Generate Flashcards
+            if (data.flashcards && data.flashcards.length > 0) {
+                html += `<h3 class="fun-font text-xl mt-4 mb-2">🧠 Flashcards</h3>`;
+                data.flashcards.forEach(card => {
+                    html += `
+                    <div class="flashcard-container" onclick="this.classList.toggle('flipped'); window.playSound('bloop');">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">${card.f}</div>
+                            <div class="flashcard-back">${card.b}</div>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            // 2. Generate Mini-Quizzes
+            if (data.quizzes && data.quizzes.length > 0) {
+                html += `<h3 class="fun-font text-xl mt-6 mb-2">📝 Mini-Quiz</h3>`;
+                data.quizzes.forEach((q, i) => {
+                    html += `
+                    <div class="quiz-box">
+                        <h3>Q: ${q.q}</h3>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            ${q.o.map((opt, oIdx) => `
+                                <button class="action-btn" onclick="window.checkQuiz(this, ${oIdx === q.a}, '${q.s}', '${subject}_${topic}_q${i}')">${opt}</button>
+                            `).join('')}
+                        </div>
+                        <div class="feedback-msg hidden mt-2"></div>
+                    </div>`;
+                });
+            }
+
+            // 3. Generate Interactive Widgets
+            if (data.widget) {
+                html += `<h3 class="fun-font text-xl mt-6 mb-2">🎮 Interactive</h3>`;
+                html += data.widget();
+            }
+
+            contentDiv.innerHTML = html;
+
+            // Apply theme styles to the modal
+            const modal = document.getElementById('notebook-modal');
+            modal.className = 'notebook-modal'; // reset base class
+            if (subject === 'cyber') modal.classList.add('cyber-style');
+            if (subject === 'master_cyber') modal.classList.add('master-style');
+            if (subject === 'phd_genetics') modal.classList.add('phd-style');
+
+            // Open the modal
+            document.getElementById('overlay').style.display = 'block';
+            modal.style.display = 'block';
+
+            // Reward the player for opening a new notebook
+            window.earnReward(`notebook_${subject}_${topic}`, 1, 10);
+        };
+
+        // --- MINI-QUIZ CHECKER ---
+        window.checkQuiz = function (btn, isCorrect, successMsg, key) {
+            const container = btn.parentElement.parentElement;
+            const feedback = container.querySelector('.feedback-msg');
+            const buttons = container.querySelectorAll('.action-btn');
+
+            // Disable buttons after a guess
+            buttons.forEach(b => b.disabled = true);
+
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                window.playSound('ding');
+                btn.classList.add('!bg-green-500');
+                feedback.innerText = "⭐ " + successMsg;
+                feedback.className = "feedback-msg feedback-correct block mt-2";
+                window.earnReward(key, 1, 5); // Reward for correct answer
+            } else {
+                window.playSound('buzzer');
+                btn.classList.add('!bg-red-500');
+                feedback.innerText = "❌ Oops, try again later!";
+                feedback.className = "feedback-msg feedback-incorrect block mt-2";
+            }
+        };
+
+        // --- BOSS BATTLE PLACEHOLDER ---
+        window.startBoss = function (subject) {
+            window.playSound('buzzer');
+            window.customAlert("The Boss is currently powering up! Boss battles are under construction. Check back soon.", "Boss Battle Locked");
+        };
+
+        // --- NAVIGATION LOGIC ---
+        window.switchView = function (viewId) {
+            window.playSound('bloop');
+            document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            const header = document.getElementById('main-header'); const title = document.getElementById('header-title');
+            document.body.classList.remove('theme-genetics', 'theme-microbiome', 'theme-cyber', 'theme-data', 'theme-phd', 'theme-master');
+            header.className = 'site-header';
+
+            if (viewId === 'view-genetics') {
+                if (window.userProgress.currentGeneticsMode === 'phd') {
+                    document.body.classList.add('theme-phd'); header.classList.add('header-phd');
+                    title.innerHTML = '🎓 Genetics <span class="text-yellow-400 font-bold">[PhD]</span>';
+                } else {
+                    document.body.classList.add('theme-genetics');
+                    title.innerHTML = '🧬 Genetics Galaxy! <span class="rocket" onclick="window.launchRocket(this)">🚀</span>';
+                }
+                window.checkPhDState();
+            }
+            else if (viewId === 'view-microbiome') { document.body.classList.add('theme-microbiome'); title.innerHTML = '🦠 Microbiome World! <span class="rocket" onclick="window.launchRocket(this)">🚀</span>'; }
+            else if (viewId === 'view-cyber') {
+                if (window.userProgress.currentCyberMode === 'master') {
+                    document.body.classList.add('theme-master'); header.classList.add('header-master');
+                    title.innerHTML = '🥷 Cyber City <span class="text-neon-green font-bold">[MASTERS]</span>';
+                } else {
+                    document.body.classList.add('theme-cyber'); header.classList.add('header-cyber');
+                    title.innerHTML = '🔐 Cyber City! 💻';
+                }
+                window.checkMasterState();
+            }
+            else if (viewId === 'view-data') { document.body.classList.add('theme-data'); title.innerHTML = '📈 Data Dash! 📊'; window.switchDataTab('sql'); }
+            else if (viewId === 'view-shop') { window.updateShopUI(); title.innerHTML = '🌍 Learning Galaxy! <span class="rocket" onclick="window.launchRocket(this)">🚀</span>'; }
+            else { title.innerHTML = '🌍 Learning Galaxy! <span class="rocket" onclick="window.launchRocket(this)">🚀</span>'; }
+        }
+
+        window.switchDataTab = function (tabId) {
+            window.playSound('bloop');
+            document.querySelectorAll('.data-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.data-tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`data-tab-${tabId}`).classList.add('active');
+            document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+        }
+
+        window.checkPhDState = function () {
+            const hasPhd = window.userProgress.completedKeys.includes('boss_genetics');
+            const btnPhd = document.getElementById('phd-toggle-btn');
+            const btnNormal = document.getElementById('normal-toggle-btn');
+            const viewNormal = document.getElementById('genetics-normal');
+            const viewPhd = document.getElementById('genetics-phd');
+
+            if (!hasPhd) {
+                btnPhd.classList.add('hidden'); btnNormal.classList.add('hidden');
+                viewNormal.style.display = 'block'; viewPhd.style.display = 'none';
+                return;
+            }
+
+            if (window.userProgress.currentGeneticsMode === 'phd') {
+                btnPhd.classList.add('hidden'); btnNormal.classList.remove('hidden');
+                viewNormal.style.display = 'none'; viewPhd.style.display = 'block';
+            } else {
+                btnPhd.classList.remove('hidden'); btnNormal.classList.add('hidden');
+                viewNormal.style.display = 'block'; viewPhd.style.display = 'none';
+            }
+        }
+
+        window.checkMasterState = function () {
+            const hasMaster = window.userProgress.completedKeys.includes('boss_cyber');
+            const btnMaster = document.getElementById('master-toggle-btn');
+            const btnNormal = document.getElementById('normal-cyber-toggle-btn');
+            const viewNormal = document.getElementById('cyber-normal');
+            const viewMaster = document.getElementById('cyber-master');
+
+            if (!hasMaster) {
+                btnMaster.classList.add('hidden'); btnNormal.classList.add('hidden');
+                viewNormal.style.display = 'block'; viewMaster.style.display = 'none';
+                return;
+            }
+
+            if (window.userProgress.currentCyberMode === 'master') {
+                btnMaster.classList.add('hidden'); btnNormal.classList.remove('hidden');
+                viewNormal.style.display = 'none'; viewMaster.style.display = 'block';
+            } else {
+                btnMaster.classList.remove('hidden'); btnNormal.classList.add('hidden');
+                viewNormal.style.display = 'block'; viewMaster.style.display = 'none';
+            }
+        }
+
+        window.togglePhDMode = function () {
+            window.playSound('win');
+            window.userProgress.currentGeneticsMode = (window.userProgress.currentGeneticsMode === 'phd') ? 'normal' : 'phd';
+            window.saveProgress(); window.switchView('view-genetics');
+        }
+
+        window.toggleMasterMode = function () {
+            window.playSound('win');
+            window.userProgress.currentCyberMode = (window.userProgress.currentCyberMode === 'master') ? 'normal' : 'master';
+            window.saveProgress(); window.switchView('view-cyber');
+        }
+
+        // --- SECRET ADMIN MODE ---
+        window.rocketClicks = 0;
+        window.launchRocket = function (el) {
+            window.playSound('bloop');
+            el.classList.add('rocket-launch');
+            setTimeout(() => el.classList.remove('rocket-launch'), 2000);
+            window.rocketClicks++;
+            if (window.rocketClicks >= 5) {
+                window.activateAdminMode();
+                window.rocketClicks = 0;
+            }
+        }
+
+        window.activateAdminMode = function () {
+            window.playSound('win'); window.shootConfetti(); window.shootConfetti();
+            window.userProgress.stars += 1000; window.userProgress.xp += 5000;
+            const allUnlocks = ['cursor_wand', 'cursor_alien', 'theme_matrix', 'theme_neon', 'outfit_labcoat', 'outfit_suit', 'acc_glasses', 'acc_visor'];
+            allUnlocks.forEach(u => { if (!window.userProgress.unlocks.includes(u)) window.userProgress.unlocks.push(u); });
+            ['boss_genetics', 'boss_microbiome', 'boss_cyber', 'boss_data_sql', 'boss_data_python', 'boss_data_r'].forEach(b => {
+                if (!window.userProgress.completedKeys.includes(b)) window.userProgress.completedKeys.push(b);
+            });
+            window.saveProgress(); window.updateShopUI();
+            window.customAlert("ADMIN MODE ACTIVATED! All shop items, game modes, and 1000 Stars unlocked! 🚀", "🚀 SECRET FOUND 🚀");
+        }
+
+        // --- MODAL LOGIC ---
+        window.openSettings = function () { window.playSound('bloop'); document.getElementById('overlay').style.display = 'block'; document.getElementById('settings-modal').style.display = 'block'; }
+        window.openTrophies = function () {
+            window.playSound('bloop');
+            const listDiv = document.getElementById('trophy-list'); listDiv.innerHTML = '';
+            Object.keys(window.achievementsList).forEach(key => {
+                const ach = window.achievementsList[key]; const unlocked = window.userProgress.achievements.includes(key);
+                listDiv.innerHTML += `
+                <div class="trophy-item ${unlocked ? 'unlocked' : ''}">
+                    <div class="trophy-icon">${unlocked ? ach.icon : '🔒'}</div>
+                    <div class="trophy-details"><h4>${unlocked ? ach.name : '???'}</h4><p>${unlocked ? ach.desc : 'Keep playing to unlock.'}</p></div>
+                </div>`;
+            });
+            document.getElementById('overlay').style.display = 'block'; document.getElementById('trophy-modal').style.display = 'block';
+        }
+        window.closeModals = function () {
+            window.playSound('bloop'); document.querySelectorAll('.notebook-modal, #settings-modal, #boss-modal, #trophy-modal').forEach(m => m.style.display = 'none');
+            if (document.getElementById('custom-alert-modal').style.display !== 'block' && document.getElementById('onboarding-modal').style.display !== 'block') {
+                document.getElementById('overlay').style.display = 'none';
+            }
+            if (window.pathogenInterval) clearInterval(window.pathogenInterval);
+        }
+
+        // --- MEGA QUIZ LOGIC ---
+        window.megaQuizState = { subject: '', pool: [], currentIdx: 0, score: 0 };
+
+        window.startMegaQuiz = function (subject) {
+            window.playSound('bloop');
+            window.megaQuizState.subject = subject; window.megaQuizState.score = 0; window.megaQuizState.currentIdx = 0;
+
+            let dbPool = [...window.megaQuizDB[subject]];
+            for (let i = dbPool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [dbPool[i], dbPool[j]] = [dbPool[j], dbPool[i]];
+            }
+            window.megaQuizState.pool = dbPool.slice(0, 5);
+
+            window.switchView('view-mega-quiz');
+            window.renderMegaQuizQuestion();
+        }
+
+        window.renderMegaQuizQuestion = function () {
+            const container = document.getElementById('mega-quiz-container');
+            const qData = window.megaQuizState.pool[window.megaQuizState.currentIdx];
+            document.getElementById('quiz-progress-text').innerText = `${window.megaQuizState.currentIdx + 1} / 5`;
+            document.getElementById('quiz-progress-fill').style.width = `${((window.megaQuizState.currentIdx) / 5) * 100}%`;
+
+            let html = `
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">${qData[0]}</h2>
+            <div class="flex flex-col gap-3">
+                ${qData[1].map((opt, i) => `<button class="action-btn !text-lg !text-left !pl-6 w-full" onclick="window.answerMegaQuiz(${i})">${['A', 'B', 'C', 'D'][i]}) ${opt}</button>`).join('')}
+            </div>
+            <div id="mega-quiz-feedback" class="mt-4 font-bold text-xl h-8"></div>
+        `;
+            container.innerHTML = html;
+        }
+
+        window.answerMegaQuiz = function (selectedIdx) {
+            const qData = window.megaQuizState.pool[window.megaQuizState.currentIdx];
+            const feedback = document.getElementById('mega-quiz-feedback');
+            const buttons = document.querySelectorAll('#mega-quiz-container .action-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedIdx === qData[2]) {
+                window.playSound('ding'); window.megaQuizState.score++;
+                buttons[selectedIdx].classList.add('!bg-green-500');
+                feedback.innerText = "⭐ Correct!"; feedback.className = "mt-4 font-bold text-xl text-green-600";
+            } else {
+                window.playSound('buzzer');
+                buttons[selectedIdx].classList.add('!bg-red-500'); buttons[qData[2]].classList.add('!bg-green-500');
+                feedback.innerText = "❌ Incorrect!"; feedback.className = "mt-4 font-bold text-xl text-red-600";
+            }
+
+            window.megaQuizState.currentIdx++;
+            setTimeout(() => {
+                if (window.megaQuizState.currentIdx < 5) { window.renderMegaQuizQuestion(); }
+                else { window.finishMegaQuiz(); }
+            }, 1200);
+        }
+
+        window.finishMegaQuiz = function () {
+            document.getElementById('quiz-progress-fill').style.width = `100%`;
+            const container = document.getElementById('mega-quiz-container');
+            let resultHtml = `<h2 class="text-4xl font-bold mb-4 fun-font text-blue-600">Quiz Complete!</h2>
+                          <p class="text-2xl mb-6 font-bold">You scored: ${window.megaQuizState.score} / 5</p>`;
+
+            if (window.megaQuizState.score >= 4) {
+                window.playSound('win'); window.shootConfetti();
+                resultHtml += `<p class="text-green-600 font-bold text-xl mb-6">Excellent work! ⭐ +3 Stars | 📈 +50 XP</p>`;
+                setTimeout(() => window.earnReward(`megaquiz_${window.megaQuizState.subject}_pass_${Date.now()}`, 3, 50), 500);
+            } else {
+                window.playSound('buzzer');
+                resultHtml += `<p class="text-red-500 font-bold text-xl mb-6">You need at least 4/5 to pass and earn rewards. Try again!</p>`;
+            }
+
+            resultHtml += `<button class="action-btn !bg-blue-600 !text-xl" onclick="window.quitMegaQuiz()">Return to Universe</button>`;
+            container.innerHTML = resultHtml;
+        }
+
+        window.quitMegaQuiz = function () {
+            if (window.megaQuizState.subject === 'genetics') window.switchView('view-genetics');
+            else if (window.megaQuizState.subject === 'cyber') window.switchView('view-cyber');
+            else window.switchView('view-hub');
+        }
+
+        // --- ADVANCED RANDOMIZED DATABASE ---
+        window.pickRandom = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        window.databases = {
+            genetics: {
+                genetics: {
+                    title: "DNA Decode", content: `<p>DNA is storage, RNA is a copy, Proteins do work.</p>`,
+                    flashcards: [{ f: "Central Dogma", b: "DNA → RNA → Protein" }, { f: "Transcription", b: "Copying DNA into RNA." }],
+                    quizzes: [{ q: "Working copy of DNA?", o: ["Protein", "RNA"], a: 1, s: "Bingo!" }, { q: "Where is DNA?", o: ["Nucleus", "Shoe"], a: 0, s: "Correct!" }],
+                    widget: () => {
+                        const bases = ['A', 'T', 'C', 'G']; let seq = ''; for (let i = 0; i < 4; i++) seq += window.pickRandom(bases);
+                        window.dTarget = seq.split('').map(c => c === 'A' ? 'U' : c === 'T' ? 'A' : c === 'C' ? 'G' : 'C').join('');
+                        return `<div class="mt-4 p-4 bg-gray-100 border-4 border-blue-300 rounded-xl text-center"><h4 class="font-bold mb-2">🧬 Transcribe DNA!</h4><div class="text-2xl tracking-widest font-mono bg-white p-2 border-2 inline-block mb-2">${seq}</div><div class="text-xl mb-2">RNA: <span id="rna-output" class="font-mono text-blue-600 font-bold bg-white px-2 py-1 rounded"></span></div><div class="space-x-2"><button class="action-btn !py-1 !px-3" onclick="window.addRna('A')">A</button><button class="action-btn !py-1 !px-3" onclick="window.addRna('U')">U</button><button class="action-btn !py-1 !px-3" onclick="window.addRna('C')">C</button><button class="action-btn !py-1 !px-3" onclick="window.addRna('G')">G</button></div><p id="dna-success" class="text-green-600 font-bold mt-3" style="display:none;">⭐ Perfect Match!</p></div>`;
+                    }
+                },
+                metabolism: {
+                    title: "Energy Factory", content: `<p>Metabolism turns food into energy using Cofactors.</p>`,
+                    flashcards: [{ f: "Cofactor", b: "A helper molecule an enzyme needs." }, { f: "ATP", b: "The energy currency of the cell." }],
+                    quizzes: [{ q: "Makes NAD+?", o: ["Vit D", "Vit B3"], a: 1, s: "Awesome!" }, { q: "ATP is?", o: ["Energy", "Waste"], a: 0, s: "Power!" }],
+                    widget: () => {
+                        const vits = ['Vit B3', 'Vit C', 'Iron']; const target = window.pickRandom(vits);
+                        return `<div class="mt-4 p-4 bg-green-100 border-4 border-green-500 rounded-xl text-center"><h4 class="font-bold mb-2">⚡ Fix Enzyme (Needs ${target})</h4><div id="enzyme-state" class="text-red-500 font-bold mb-3">🔴 ENZYME BROKEN</div>${vits.map(v => `<button class="action-btn !bg-green-600" onclick="window.synthesizeEnzyme(${v === target})">Add ${v}</button>`).join('')}</div>`;
+                    }
+                },
+                stats: {
+                    title: "Math Mountain", content: `<p>Genetics needs strict P-values for massive data.</p>`,
+                    flashcards: [{ f: "Bonferroni", b: "A strict P-value cutoff." }, { f: "P-Value", b: "Probability of a false positive." }],
+                    quizzes: [{ q: "Why super tiny p-value?", o: ["Avoid false positives", "Math is hard"], a: 0, s: "Genius!" }, { q: "Strict cutoff name?", o: ["Bonferroni", "T-test"], a: 0, s: "Strict!" }],
+                    widget: () => {
+                        window.dTarget = window.pickRandom([0.01, 0.05]);
+                        return `<div class="mt-4 p-4 bg-purple-100 border-4 border-purple-400 rounded-xl text-center"><h4 class="font-bold mb-2">📉 Slider (Target: ${window.dTarget})</h4><input type="range" min="0.01" max="0.10" step="0.01" value="0.10" class="w-full" oninput="window.updatePval(this.value)"><p>P-Value: <span id="pval-display">0.10</span></p><p>Status: <span id="false-positives" class="font-bold text-red-600">🚨 HIGH</span></p></div>`;
+                    }
+                },
+                ml: {
+                    title: "Robot Brains", content: `<p>Computers find patterns using ML!</p>`,
+                    flashcards: [{ f: "Unsupervised ML", b: "Finding hidden structures." }, { f: "Algorithm", b: "A set of rules for a computer." }],
+                    quizzes: [{ q: "Finds unknown clusters?", o: ["Supervised", "Unsupervised"], a: 1, s: "Correct!" }, { q: "Clustering?", o: ["Grouping data", "Deleting data"], a: 0, s: "Grouped!" }],
+                    widget: () => {
+                        window.dynVars.loss = 1.0;
+                        return `<div class="mt-4 p-4 bg-orange-100 border-4 border-orange-400 rounded-xl text-center"><h4 class="font-bold mb-2">🤖 Train Neural Net</h4><p class="text-sm mb-2">Click to run epochs and minimize loss below 0.1!</p><div class="text-2xl font-mono bg-white p-2 mb-2">Loss: <span id="ml-loss">1.000</span></div><button class="action-btn !bg-orange-500" onclick="window.trainEpoch()">Run Epoch</button><p id="ml-success" class="text-orange-600 font-bold mt-2" style="display:none;">⭐ Model Trained!</p></div>`
+                    }
+                },
+                lab_rats: {
+                    title: "Breeding Sim", content: `<p>Mendelian genetics determines traits. Dominant hides Recessive.</p>`,
+                    flashcards: [{ f: "Heterozygous", b: "Having two different alleles (Aa)." }, { f: "Recessive", b: "A trait masked by dominant ones (aa)." }],
+                    quizzes: [{ q: "Chance of 'aa' from Aa x Aa?", o: ["25%", "50%"], a: 0, s: "Correct!" }, { q: "Dominant allele?", o: ["Capital letter", "Lowercase"], a: 0, s: "Yes!" }],
+                    widget: () => { setTimeout(window.initRatGame, 10); return `<div id="rat-game-container"></div>`; }
+                }
+            },
+            phd_genetics: {
+                crispr: {
+                    title: "CRISPR-Cas9", content: `<p>Targeted gene editing using guide RNA (gRNA).</p>`,
+                    flashcards: [{ f: "Cas9", b: "The molecular scissors that cut DNA." }, { f: "PAM Sequence", b: "A short sequence needed for Cas9 to bind." }],
+                    quizzes: [{ q: "What acts as scissors?", o: ["Cas9", "mRNA"], a: 0, s: "Snip snip!" }, { q: "Guides Cas9?", o: ["gRNA", "DNA"], a: 0, s: "Target locked!" }],
+                    widget: () => {
+                        const targets = ['AAGCTT', 'GGATCC', 'GAATTC']; const seq = window.pickRandom(targets);
+                        window.dTarget = seq.split('').map(c => c === 'A' ? 'U' : c === 'T' ? 'A' : c === 'C' ? 'G' : 'C').join(''); window.dynVars.grnaSeq = "";
+                        return `<div class="mt-4 p-4 bg-indigo-100 border-4 border-indigo-500 rounded-xl text-center"><h4 class="font-bold mb-2 text-indigo-800">✂️ Design gRNA</h4><p class="text-sm mb-2">Target DNA: <span class="font-mono bg-white p-1 border">${seq}</span></p><div class="font-mono text-xl tracking-widest mb-3 text-blue-700 font-bold" id="grna-builder">_ _ _ _ _ _</div><div class="space-x-2"><button class="action-btn !bg-indigo-600 !py-1 !px-3" onclick="window.buildGrna('A')">A</button><button class="action-btn !bg-indigo-600 !py-1 !px-3" onclick="window.buildGrna('U')">U</button><button class="action-btn !bg-indigo-600 !py-1 !px-3" onclick="window.buildGrna('C')">C</button><button class="action-btn !bg-indigo-600 !py-1 !px-3" onclick="window.buildGrna('G')">G</button></div></div>`;
+                    }
+                },
+                gwas: {
+                    title: "GWAS Stats", content: `<p>Finding SNPs associated with diseases.</p>`,
+                    flashcards: [{ f: "Manhattan Plot", b: "Visualizes SNPs across chromosomes." }, { f: "SNP", b: "Single Nucleotide Polymorphism." }],
+                    quizzes: [{ q: "What plot is used?", o: ["Manhattan", "Scatter"], a: 0, s: "Correct!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-gray-200 border-4 border-gray-500 rounded-xl text-center"><h4 class="font-bold mb-2">🏙️ Find Significant SNP</h4><div class="h-24 border-b-2 border-l-2 border-black relative flex items-end justify-around px-2"><div class="w-2 h-8 bg-blue-500"></div><div class="w-2 h-12 bg-blue-500"></div><div class="w-2 h-20 bg-indigo-500 cursor-pointer animate-pulse" onclick="window.playSound('win'); this.classList.remove('animate-pulse'); this.style.backgroundColor='gold'; window.earnReward('widget_gwas', 2, 20);"></div><div class="w-2 h-6 bg-blue-500"></div><div class="absolute w-full border-t-2 border-indigo-500 border-dashed" style="bottom: 15px;"></div></div><p class="text-xs mt-2">Click the dot above the significance line.</p></div>`
+                },
+                transcriptomics: {
+                    title: "RNA-Seq", content: `<p>Measuring gene expression levels.</p>`,
+                    flashcards: [{ f: "Heatmap", b: "Shows up/down regulation of genes." }], quizzes: [{ q: "Measures what?", o: ["RNA", "DNA"], a: 0, s: "Correct!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-purple-100 border-4 border-purple-500 rounded-xl text-center"><h4 class="font-bold mb-2">🔥 Heatmap Analysis</h4><p class="text-sm">Select the most upregulated (hottest) gene.</p><div class="flex justify-center gap-2 mt-2"><div class="w-10 h-10 bg-blue-500 cursor-pointer border" onclick="window.playSound('buzzer')"></div><div class="w-10 h-10 bg-red-600 cursor-pointer border" onclick="window.playSound('win'); this.innerHTML='⭐'; window.earnReward('widget_rna', 2, 20);"></div><div class="w-10 h-10 bg-white cursor-pointer border" onclick="window.playSound('buzzer')"></div></div></div>`
+                },
+                phd_rats: {
+                    title: "Adv. Lab Rats", content: `<p>Creating transgenic animal models using Cre-lox recombination.</p>`,
+                    flashcards: [{ f: "Cre-loxP", b: "Tissue-specific gene knockout." }], quizzes: [{ q: "Tissue specific?", o: ["Cre-loxP", "Mendel"], a: 0, s: "Advanced!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-indigo-900 border-4 border-indigo-500 rounded-xl text-center text-white"><h4 class="font-bold mb-2 text-indigo-200">🧫 Tissue Knockout</h4><div class="flex justify-center gap-4 text-xl mb-4"><div class="bg-black p-2 border">Rat: LoxP (Gene)</div> ➕ <div class="bg-black p-2 border">Virus: Cre (Brain)</div></div><button class="action-btn !bg-indigo-500" onclick="window.playSound('win'); document.getElementById('cre-out').style.display='block'; window.earnReward('widget_cre', 2, 20);">Inject Vector</button><p id="cre-out" class="text-green-400 font-bold mt-2" style="display:none;">⭐ Gene deleted ONLY in the brain!</p></div>`
+                }
+            },
+            microbiome: {
+                bacteria: {
+                    title: "Bacteria Basics", content: `<p>Bacteria are single-celled prokaryotes.</p>`,
+                    flashcards: [{ f: "Prokaryote", b: "Cell with no true nucleus." }, { f: "Pathogen", b: "An organism that causes disease." }],
+                    quizzes: [{ q: "Has a nucleus?", o: ["Eukaryote", "Prokaryote"], a: 0, s: "Right!" }, { q: "Antibiotics kill?", o: ["Viruses", "Bacteria"], a: 1, s: "Zap!" }],
+                    widget: () => { window.dynVars.bactCount = 3; return `<div class="mt-4 p-4 bg-green-100 border-4 border-green-500 rounded-xl text-center h-48 relative overflow-hidden"><h4 class="font-bold mb-2">🧫 Antibiotic Clicker</h4><div class="absolute inset-0 pt-10">${[...Array(3)].map(() => `<div class="bacteria-target text-3xl" style="left:${Math.random() * 80}%; top:${20 + Math.random() * 60}%" onclick="window.killBacteria(this)">🦠</div>`).join('')}</div><p id="bact-success" class="text-green-700 font-bold mt-10 relative z-10 bg-white inline-block px-2" style="display:none;">⭐ Infection Cleared!</p></div>`; }
+                },
+                viruses: {
+                    title: "Virus Vault", content: `<p>Viruses need a host cell to replicate.</p>`,
+                    flashcards: [{ f: "Capsid", b: "The protein shell of a virus." }, { f: "Vaccine", b: "Trains the immune system." }],
+                    quizzes: [{ q: "Are viruses alive?", o: ["Yes", "Debated/No"], a: 1, s: "Exactly." }, { q: "Virus shell?", o: ["Capsid", "Membrane"], a: 0, s: "Shielded!" }],
+                    widget: () => { const shapes = ['▲', '●', '■']; window.dTarget = window.pickRandom(shapes); return `<div class="mt-4 p-4 bg-purple-100 border-4 border-purple-500 rounded-xl text-center"><h4 class="font-bold mb-2">🧬 Match Receptor to Cell: ${window.dTarget}</h4><div class="flex justify-center gap-4 mt-4">${shapes.map(s => `<div class="virus-match" onclick="window.matchVirus(this)">${s}</div>`).join('')}</div><p id="virus-success" class="text-purple-700 font-bold mt-2" style="display:none;">⭐ Receptor Matched!</p></div>`; }
+                },
+                fungi: {
+                    title: "Fungi Forest", content: `<p>Fungi decompose dead matter and recycle nutrients.</p>`,
+                    flashcards: [{ f: "Mycelium", b: "The root-like network of a fungus." }, { f: "Spores", b: "How fungi reproduce." }],
+                    quizzes: [{ q: "Fungi role?", o: ["Producer", "Decomposer"], a: 1, s: "Yep!" }, { q: "Fungi network?", o: ["Mycelium", "Roots"], a: 0, s: "Connected!" }],
+                    widget: () => { window.dynVars.fungiClicks = 0; return `<div class="mt-4 p-4 bg-orange-100 border-4 border-orange-500 rounded-xl text-center"><h4 class="font-bold mb-2">🍄 Click to Decompose!</h4><div id="fungi-log" class="text-5xl cursor-pointer select-none" onclick="window.decomposeFungi()">🪵</div><p id="fungi-success" class="text-orange-700 font-bold mt-2" style="display:none;">⭐ Recycled!</p></div>`; }
+                },
+                immune: {
+                    title: "Immune Defense", content: `<p>White blood cells protect you from invaders.</p>`,
+                    flashcards: [{ f: "Macrophage", b: "A large cell that eats pathogens." }, { f: "Antibody", b: "Tags invaders for destruction." }],
+                    quizzes: [{ q: "Eats pathogens?", o: ["Macrophage", "Red Blood Cell"], a: 0, s: "Chomp!" }, { q: "Tags invaders?", o: ["Antibody", "Pathogen"], a: 0, s: "Tagged!" }],
+                    widget: () => {
+                        setTimeout(() => {
+                            if (window.pathogenInterval) clearInterval(window.pathogenInterval);
+                            window.pathogenInterval = setInterval(() => {
+                                const p = document.getElementById('pathogen-target');
+                                if (p) { p.style.left = (Math.random() * 80) + '%'; p.style.top = (Math.random() * 60) + '%'; }
+                            }, 600);
+                        }, 100);
+                        return `<div class="mt-4 p-4 bg-red-100 border-4 border-red-500 rounded-xl text-center"><h4 class="font-bold mb-2 text-red-800">🛡️ Macrophage Munch!</h4><p class="text-sm">Catch the moving pathogen!</p><div class="bg-red-200 h-32 relative rounded border border-red-300 overflow-hidden"><div id="pathogen-target" class="absolute text-4xl cursor-crosshair transition-all duration-300 ease-in-out" style="left:50%; top:50%" onclick="window.eatPathogen()">🦠</div></div><p id="immune-success" class="text-red-700 font-bold mt-2" style="display:none;">⭐ Pathogen Destroyed!</p></div>`
+                    }
+                },
+                outbreak: {
+                    title: "Outbreak Sim", content: `<p>Cure randomly generated patients by selecting the correct treatment combination.</p>`,
+                    flashcards: [{ f: "Broad-Spectrum", b: "An antibiotic effective against a wide range of bacteria." }, { f: "Probiotic", b: "Good bacteria that help keep your gut healthy." }],
+                    quizzes: [{ q: "Kills viruses?", o: ["Antiviral", "Antibiotic"], a: 0, s: "Targeted!" }, { q: "Restores gut flora?", o: ["Probiotic", "Aspirin"], a: 0, s: "Healthy!" }],
+                    widget: () => { setTimeout(window.initMicroGame, 10); return `<div id="micro-game-container"></div>`; }
+                }
+            },
+            cyber: {
+                phishing: {
+                    title: "Phishing Pond", content: `<p>Hackers trick humans via Social Engineering.</p>`,
+                    flashcards: [{ f: "Spear Phishing", b: "Targeted fake email." }, { f: "Social Engineering", b: "Hacking the human mind." }],
+                    quizzes: [{ q: "Targeted scam?", o: ["Spear Phishing", "Spam"], a: 0, s: "Bullseye!" }, { q: "Fake email?", o: ["Phishing", "Blogging"], a: 0, s: "Caught!" }],
+                    widget: () => { const targets = [{ f: "Secur1ty@paypa1.com", p: true }, { f: "support@paypal.com", p: false }, { f: "admin@chase-bank-verify.com", p: true }]; const t = window.pickRandom(targets); return `<div class="mt-4 p-4 bg-white border-2 rounded text-left"><div class="border-b pb-2 mb-2"><b>From:</b> ${t.f}</div><p>Please <span data-phish="${t.p}" onclick="window.catchPhish(this)" class="red-flag text-blue-600 underline">click here</span>.</p></div>`; }
+                },
+                crypto: {
+                    title: "Crypto Castle", content: `<p>Encryption locks data, Hashing scrambles it!</p>`,
+                    flashcards: [{ f: "Asymmetric Key", b: "Uses TWO keys." }, { f: "Hashing", b: "One-way data scrambling." }],
+                    quizzes: [{ q: "Uses TWO keys?", o: ["Symmetric", "Asymmetric"], a: 1, s: "Nailed it!" }, { q: "Scrambles data?", o: ["Hashing", "Zipping"], a: 0, s: "Mixed up!" }],
+                    widget: () => {
+                        window.dTarget = Math.floor(Math.random() * 900) + 100; // 3 digit pin
+                        window.dynVars.guesses = 0;
+                        return `<div class="mt-4 p-4 bg-black border-4 border-green-500 rounded-xl text-center"><h4 class="font-bold mb-2 text-neon-green">🗝️ Bruteforce PIN</h4><p class="text-xs text-gray-400 mb-2">Guess the 3-digit PIN. Feedback given!</p><div class="flex justify-center gap-2 mb-2"><input type="number" id="pin-guess" class="w-20 p-2 text-black font-mono"><button class="action-btn !bg-green-600 !py-1" onclick="window.guessPin()">Crack</button></div><div id="pin-feedback" class="font-mono text-neon-green bg-gray-900 p-2 min-h-[30px]"></div></div>`
+                    }
+                },
+                malware: {
+                    title: "Malware Maze", content: `<p>Trojans hide, Ransomware locks you out!</p>`,
+                    flashcards: [{ f: "Ransomware", b: "Demands money." }, { f: "Trojan", b: "Malware disguised as safe software." }],
+                    quizzes: [{ q: "Hides inside?", o: ["Trojan", "Worm"], a: 0, s: "Like Troy!" }, { q: "Demands money?", o: ["Ransomware", "Adware"], a: 0, s: "Locked!" }],
+                    widget: () => { window.mazeLayout = [[1, 1, 0, 0, 0], [0, 1, 1, 1, 0], [0, 0, 0, 1, 0], [0, 1, 1, 1, 0], [0, 1, 0, 2, 0]]; window.px = 0; window.py = 0; setTimeout(window.renderMaze, 10); return `<div class="mt-4 p-4 bg-black border-4 border-red-500 rounded-xl text-center"><h4 class="font-bold mb-2 text-red-500">🦠 Escape!</h4><div id="maze-grid" class="grid grid-cols-5 gap-0 w-[150px] h-[150px] mx-auto bg-gray-900 border-2 mb-3"></div><div class="flex justify-center gap-1"><button class="action-btn !bg-gray-800 !p-2" onclick="window.moveMaze(0,-1)">⬆️</button></div><div class="flex justify-center gap-1 mt-1"><button class="action-btn !bg-gray-800 !p-2" onclick="window.moveMaze(-1,0)">⬅️</button><button class="action-btn !bg-gray-800 !p-2" onclick="window.moveMaze(0,1)">⬇️</button><button class="action-btn !bg-gray-800 !p-2" onclick="window.moveMaze(1,0)">➡️</button></div><p id="maze-success" class="text-green-500 font-bold mt-2" style="display:none;">⭐ Rescued!</p></div>`; }
+                },
+                network: {
+                    title: "Network Nexus", content: `<p>Firewalls act as digital bouncers.</p>`,
+                    flashcards: [{ f: "Firewall", b: "Blocks bad access." }, { f: "Port", b: "A virtual door for network traffic." }],
+                    quizzes: [{ q: "Digital bouncer?", o: ["Firewall", "Router"], a: 0, s: "Correct!" }, { q: "Blocks access?", o: ["Firewall", "Cable"], a: 0, s: "Blocked!" }],
+                    widget: () => { window.dTarget = window.pickRandom([4444, 22, 8080]); return `<div class="mt-4 p-4 bg-gray-900 border-4 border-blue-500 rounded-xl text-center"><h4 class="font-bold text-blue-400">🌐 Firewall Sim</h4><div class="bg-black p-2 rounded text-left flex justify-between items-center"><span class="text-red-500 font-bold">⚠️ INCOMING: Port ${window.dTarget}</span><button class="action-btn !bg-red-600" onclick="window.blockPacket(this, ${window.dTarget})">Block</button></div></div>`; }
+                },
+                sandbox: {
+                    title: "Cyber Sandbox", content: `<p>Combine delivery methods and payloads to bypass specific security scenarios.</p>`,
+                    flashcards: [{ f: "Air-Gapped", b: "A computer physically disconnected from the internet." }, { f: "Payload", b: "The part of malware that does the actual damage." }],
+                    quizzes: [{ q: "Best way to hit an air-gapped PC?", o: ["USB Drive", "Email"], a: 0, s: "Sneaky!" }, { q: "Malware part that causes harm?", o: ["Payload", "Delivery"], a: 0, s: "Boom!" }],
+                    widget: () => { setTimeout(window.initCyberGame, 10); return `<div id="cyber-game-container"></div>`; }
+                }
+            },
+            master_cyber: {
+                zero_day: {
+                    title: "0-Day Dev", content: `<p>Buffer overflows overwrite adjacent memory to run arbitrary code.</p>`,
+                    flashcards: [{ f: "Buffer Overflow", b: "Writing more data than a buffer can hold." }, { f: "0-Day", b: "A vulnerability unknown to the software vendor." }],
+                    quizzes: [{ q: "Unknown vulnerability?", o: ["0-Day", "Patch"], a: 0, s: "Exploited!" }],
+                    widget: () => {
+                        return `<div class="mt-4 p-4 bg-gray-900 border-4 border-neon-green rounded-xl text-center"><h4 class="font-bold mb-2 text-neon-green">💥 Memory Injector</h4><p class="text-xs mb-2">Click and wait to inject payload. Stop exactly between 95% and 100% to exploit. Over 100% crashes the server!</p>
+                    <div class="w-full bg-gray-800 h-6 border border-gray-600 mb-3 relative"><div id="buffer-bar" class="bg-red-600 h-full" style="width:0%"></div><div class="absolute right-[5%] top-0 bottom-0 border-l-2 border-white border-dashed"></div></div>
+                    <button class="action-btn !bg-neon-green !text-black" onmousedown="window.startBufferFill()" onmouseup="window.stopBufferFill()" onmouseleave="window.stopBufferFill()" ontouchstart="window.startBufferFill()" ontouchend="window.stopBufferFill()">HOLD TO INJECT</button>
+                    <p id="buffer-success" class="text-neon-green font-bold mt-2" style="display:none;">⭐ Buffer Overwritten! Root Shell Gained.</p>
+                    <p id="buffer-fail" class="text-red-500 font-bold mt-2" style="display:none;">❌ System Crashed!</p></div>`;
+                    }
+                },
+                reverse: {
+                    title: "Reverse Eng", content: `<p>Decompiling software to figure out how it works without the source code.</p>`,
+                    flashcards: [{ f: "Disassembler", b: "Translates machine code into assembly language." }],
+                    quizzes: [{ q: "Translate to assembly?", o: ["Disassembler", "Compiler"], a: 0, s: "Reversed!" }],
+                    widget: () => {
+                        window.dTarget = btoa("hack").substring(0, 5);
+                        return `<div class="mt-4 p-4 bg-gray-900 border-4 border-neon-green rounded-xl text-center"><h4 class="font-bold mb-2 text-neon-green">🔄 Decompile String</h4><p class="text-sm">Target string: 'hack' -> Base64 -> First 5 chars.</p><div class="flex justify-center mt-2"><input type="text" id="decompile-in" class="p-1 font-mono text-black w-24"><button class="action-btn !bg-neon-green !text-black" onclick="if(document.getElementById('decompile-in').value==='${window.dTarget}'){window.playSound('win'); document.getElementById('decomp-success').style.display='block'; window.earnReward('widget_reverse', 2, 20);} else {window.playSound('buzzer')}">Decode</button></div><p id="decomp-success" class="text-neon-green font-bold mt-2" style="display:none;">⭐ Decoded!</p></div>`;
+                    }
+                },
+                soc: {
+                    title: "SOC Analyst", content: `<p>Security Operations Center (SOC) analysts monitor logs for threats.</p>`,
+                    flashcards: [{ f: "SIEM", b: "Tool that aggregates and analyzes security logs." }],
+                    quizzes: [{ q: "Aggregates logs?", o: ["SIEM", "Firewall"], a: 0, s: "Correct!" }],
+                    widget: () => {
+                        setTimeout(window.refreshSOCLogs, 100);
+                        return `<div class="mt-4 p-4 bg-gray-900 border-4 border-neon-green rounded-xl text-center"><h4 class="font-bold mb-2 text-neon-green">👁️ Live Threat Hunt</h4><p class="text-xs mb-2">Monitor the traffic logs. Click the IP that flashes RED to block it!</p>
+                    <div id="soc-log-list" class="bg-black border border-gray-700 h-40 overflow-hidden text-left font-mono text-xs flex flex-col justify-center"></div>
+                    <button class="action-btn !bg-gray-700 mt-2 !py-1 text-xs" onclick="window.refreshSOCLogs()">Refresh Logs</button>
+                    <p id="soc-success" class="text-neon-green font-bold mt-2" style="display:none;">⭐ Threat Neutralized!</p></div>`;
+                    }
+                },
+                crypto_adv: {
+                    title: "Adv Crypto", content: `<p>Quantum computing poses a threat to current encryption standards.</p>`,
+                    flashcards: [{ f: "Quantum Supremacy", b: "When a quantum computer outperforms classical ones." }],
+                    quizzes: [{ q: "Outperforms classical?", o: ["Quantum Supremacy", "AI"], a: 0, s: "Advanced!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-gray-900 border-4 border-neon-green rounded-xl text-center"><h4 class="font-bold mb-2 text-neon-green">🧮 Quantum Key Dist</h4><p class="text-sm">Click to entangle particles securely.</p><button class="action-btn !bg-purple-600" onclick="window.playSound('win'); this.innerText='⭐ Qubits Entangled!'; window.earnReward('widget_qkd', 2, 20);">Entangle</button></div>`
+                }
+            },
+            data_sql: {
+                queries: {
+                    title: "Basic Queries", content: `<p>Ask databases questions using SELECT.</p>`,
+                    flashcards: [{ f: "SELECT *", b: "Return ALL columns." }, { f: "WHERE", b: "Filters records based on a condition." }],
+                    quizzes: [{ q: "What is '*'?", o: ["Multiply", "All Columns"], a: 1, s: "Correct!" }, { q: "Filter command?", o: ["WHERE", "DELETE"], a: 0, s: "Got it!" }],
+                    widget: () => { const tables = ['users', 'logs', 'genes']; const t = window.pickRandom(tables); window.dTarget = `SELECT * FROM ${t}`; window.dynVars.sql = []; return `<div class="mt-4 p-4 bg-gray-100 border-4 border-teal-500 rounded-xl text-center"><h4 class="font-bold mb-2 text-teal-dark">🗄️ Query Builder: Get all from ${t}</h4><div class="space-x-2 mb-3 flex flex-wrap justify-center gap-2"><button class="action-btn !bg-teal-500 !text-sm" onclick="window.buildSql('SELECT')">SELECT</button><button class="action-btn !bg-teal-500 !text-sm" onclick="window.buildSql('${t}')">${t}</button><button class="action-btn !bg-teal-500 !text-sm" onclick="window.buildSql('*')">*</button><button class="action-btn !bg-teal-500 !text-sm" onclick="window.buildSql('FROM')">FROM</button></div><div class="bg-black text-green-400 p-2" id="sql-out">_</div><div id="sql-success" class="mt-2 bg-white text-black p-2 border-2" style="display:none;">⭐ Success!</div></div>`; }
+                },
+                joins: {
+                    title: "Table Joins", content: `<p>Combine data from multiple tables using matching IDs.</p>`,
+                    flashcards: [{ f: "INNER JOIN", b: "Returns records with matching values in both tables." }],
+                    quizzes: [{ q: "Combines tables?", o: ["JOIN", "SPLIT"], a: 0, s: "Connected!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-teal-100 border-4 border-teal-600 rounded-xl text-center"><h4 class="font-bold mb-2">🔗 Match the Foreign Key</h4><div class="flex justify-between items-center bg-white p-2 border"><div class="border p-2 bg-gray-200">Users (ID: 5)</div><button class="border p-2 bg-gray-200 hover:bg-gray-300" onclick="window.joinTables(this, false)">Orders (UserID: 2)</button><button class="border p-2 bg-gray-200 hover:bg-gray-300" onclick="window.joinTables(this, true)">Orders (UserID: 5)</button></div><p id="join-success" class="text-teal-700 font-bold mt-2" style="display:none;">⭐ Tables Linked!</p></div>`
+                },
+                agg: {
+                    title: "Aggregations", content: `<p>Group and summarize data using functions like COUNT and SUM.</p>`,
+                    flashcards: [{ f: "GROUP BY", b: "Groups rows with identical values into summary rows." }],
+                    quizzes: [{ q: "Adds values?", o: ["SUM()", "MAX()"], a: 0, s: "Math!" }],
+                    widget: () => { window.dTarget = window.pickRandom([150, 200]); const v1 = window.dTarget - 50; return `<div class="mt-4 p-4 bg-teal-100 border-4 border-teal-600 rounded-xl text-center"><h4 class="font-bold mb-2">➕ SUM(Sales)</h4><p class="font-mono bg-white inline-block px-2 mb-2">Row 1: 50 | Row 2: ${v1}</p><br><button class="action-btn !bg-teal-500" onclick="window.sumColumn(this, ${window.dTarget})">Total = ${window.dTarget}</button><button class="action-btn !bg-teal-500" onclick="window.sumColumn(this, 999)">Total = 999</button><p id="agg-success" class="text-teal-700 font-bold mt-2" style="display:none;">⭐ Calculated!</p></div>` }
+                },
+                clean: {
+                    title: "Data Cleaning", content: `<p>Clean data is good data!</p>`,
+                    flashcards: [{ f: "Null Value", b: "Missing data." }, { f: "Outlier", b: "A data point far from others." }],
+                    quizzes: [{ q: "Null value?", o: ["Zero", "Missing Data"], a: 1, s: "Right!" }, { q: "Missing data?", o: ["Null", "Full"], a: 0, s: "Empty!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-green-100 border-4 border-green-500 rounded-xl text-center"><h4 class="font-bold text-green-800">🧹 Scrub Data</h4><table class="w-full bg-white text-center border"><tr><td>Alice</td><td><span class="null-val bg-red-500 text-white px-2 cursor-pointer font-bold" onclick="window.cleanNull(this)">NULL</span></td></tr></table><p id="clean-success" class="text-green-700 font-bold mt-2" style="display:none;">⭐ Cleaned!</p></div>`
+                },
+                detective: {
+                    title: "SQL Detective", content: `<p>Use logic to track down the correct records in the database.</p>`,
+                    flashcards: [{ f: "Foreign Key", b: "A column linking to another table's Primary Key." }, { f: "Index", b: "Speeds up data retrieval in a database." }],
+                    quizzes: [{ q: "Links to primary key?", o: ["Foreign Key", "String"], a: 0, s: "Linked!" }, { q: "Speeds up search?", o: ["Index", "Where"], a: 0, s: "Fast!" }],
+                    widget: () => { setTimeout(window.initSqlGame, 10); return `<div id="sql-game-container"></div>`; }
+                }
+            },
+            data_python: {
+                vars: {
+                    title: "Variable Vault", content: `<p>Variables store data.</p>`,
+                    flashcards: [{ f: "String", b: "Text data." }, { f: "Integer", b: "A whole number data type." }],
+                    quizzes: [{ q: "Type of 'Hello'?", o: ["Integer", "String"], a: 1, s: "Correct!" }, { q: "Holds data?", o: ["Variable", "Function"], a: 0, s: "Stored!" }],
+                    widget: () => { window.dTarget = window.pickRandom(['42', 'Apple', 'True']); return `<div class="mt-4 p-4 bg-gray-900 border-4 border-blue-400 rounded-xl text-center text-white"><h4 class="font-bold mb-2 text-blue-400">📦 Store value: ${window.dTarget}</h4><div class="flex justify-center gap-2 mb-2"><span>val = </span><input type="text" id="py-var-in" class="w-24 text-black"><button class="action-btn !bg-blue-500 !py-1" onclick="window.setVar()">Save</button></div><div class="bg-black p-2 font-mono text-green-400">Memory: <span id="py-var-mem">_</span></div></div>`; }
+                },
+                loops: {
+                    title: "Looping Lanes", content: `<p>Computers love loops!</p>`,
+                    flashcards: [{ f: "For Loop", b: "Specific number of times." }, { f: "While Loop", b: "Runs until a condition is false." }],
+                    quizzes: [{ q: "Specific runs?", o: ["For", "While"], a: 0, s: "Yep!" }, { q: "Repeat code?", o: ["Loop", "If"], a: 0, s: "Round!" }],
+                    widget: () => { window.dTarget = window.pickRandom([2, 3, 4]); window.loopCount = 0; return `<div class="mt-4 p-4 bg-gray-900 border-4 border-yellow-400 rounded-xl text-center text-white"><h4 class="font-bold mb-2 text-yellow-400">🔁 Run ${window.dTarget} times</h4><div class="text-left font-mono bg-black p-2 mb-2 text-green-400">for i in range(${window.dTarget}):<br>&nbsp;&nbsp;print("Hi")</div><button class="action-btn !bg-yellow-500 !text-black" onclick="window.stepLoop()">Step >></button><div id="loop-out" class="mt-2 text-left text-gray-300 whitespace-pre"></div><p id="loop-success" class="text-yellow-400 font-bold mt-2" style="display:none;">⭐ Complete!</p></div>`; }
+                },
+                funcs: {
+                    title: "Function Factory", content: `<p>Reusable code blocks.</p>`,
+                    flashcards: [{ f: "def", b: "Define function keyword." }, { f: "Return", b: "Passes data back from a function." }],
+                    quizzes: [{ q: "Keyword?", o: ["def", "make"], a: 0, s: "Yes!" }, { q: "Reusable block?", o: ["Function", "Variable"], a: 0, s: "Used again!" }],
+                    widget: () => { window.dTarget = window.pickRandom([5, 10, 20]); return `<div class="mt-4 p-4 bg-gray-900 border-4 border-blue-400 rounded-xl text-center text-white"><h4 class="font-bold text-blue-400">⚙️ def double(x): Pass ${window.dTarget}</h4><div class="flex justify-center gap-2 mt-2"><input type="number" id="fn-in" class="w-16 text-black" value="1"><button class="action-btn !bg-blue-500 !py-1" onclick="window.runFunc()">Run</button><span class="font-bold text-xl">➡️ <span id="fn-out" class="text-green-400">_</span></span></div></div>`; }
+                },
+                lists: {
+                    title: "List Library", content: `<p>Counting starts at 0!</p>`,
+                    flashcards: [{ f: "Index 0", b: "First position." }, { f: "Append", b: "Adds an item to a list." }],
+                    quizzes: [{ q: "Index 0 in [A,B]?", o: ["A", "B"], a: 0, s: "Nailed it!" }, { q: "Holds items?", o: ["List", "Integer"], a: 0, s: "Packed!" }],
+                    widget: () => { window.dTarget = window.pickRandom([0, 1, 2]); return `<div class="mt-4 p-4 bg-gray-900 border-4 border-green-400 rounded-xl text-center text-white"><h4 class="font-bold mb-2 text-green-400">📋 Click index [${window.dTarget}]</h4><p class="mb-2">my_list = ['🍎', '🍌', '🍒']</p><button class="action-btn !bg-gray-700" onclick="window.pickList(0)">🍎</button><button class="action-btn !bg-gray-700" onclick="window.pickList(1)">🍌</button><button class="action-btn !bg-gray-700" onclick="window.pickList(2)">🍒</button><p id="list-success" class="text-green-400 font-bold mt-2" style="display:none;">⭐ Correct!</p></div>`; }
+                },
+                builder: {
+                    title: "Logic Lab", content: `<p>Combine variables and logic operators to achieve the target outcome.</p>`,
+                    flashcards: [{ f: "Boolean", b: "A data type that is either True or False." }, { f: "Float", b: "A number with a decimal point." }],
+                    quizzes: [{ q: "True/False type?", o: ["Boolean", "String"], a: 0, s: "True!" }, { q: "Number with decimal?", o: ["Float", "Int"], a: 0, s: "Precise!" }],
+                    widget: () => { setTimeout(window.initPyGame, 10); return `<div id="py-game-container"></div>`; }
+                }
+            },
+            data_r: {
+                dfs: {
+                    title: "DataFrames", content: `<p>DataFrames are spreadsheets in R.</p>`,
+                    flashcards: [{ f: "DataFrames", b: "Rows and Columns of data." }, { f: "Vector", b: "A simple list of data in R." }],
+                    quizzes: [{ q: "R spreadsheets?", o: ["DataFrames", "Word"], a: 0, s: "Tables!" }],
+                    widget: () => { window.dTarget = window.pickRandom(['summary(df)', 'head(df)']); return `<div class="mt-4 p-4 bg-blue-100 border-4 border-blue-500 rounded-xl text-center"><h4 class="font-bold mb-2 text-blue-800">📉 Type: ${window.dTarget}</h4><div class="flex justify-center items-center gap-2 mb-3"><span>></span><input type="text" id="r-input" class="p-2 border rounded w-32"><button class="action-btn !bg-blue-600 !py-1" onclick="window.runRCode()">Run</button></div><div id="r-output" class="bg-gray-900 p-2 text-gray-300 rounded">Ready...</div><p id="r-success" class="text-blue-700 font-bold mt-2" style="display:none;">⭐ Executed!</p></div>`; }
+                },
+                viz: {
+                    title: "Visualizations", content: `<p>Data Viz shows patterns using ggplot2.</p>`,
+                    flashcards: [{ f: "ggplot2", b: "The gold standard R graphing library." }],
+                    quizzes: [{ q: "Graphs package?", o: ["matplotlib", "ggplot2"], a: 1, s: "Exactly!" }],
+                    widget: () => { window.dTarget = window.pickRandom(['bar', 'pie']); return `<div class="mt-4 p-4 bg-orange-100 border-4 border-orange-500 rounded-xl text-center"><h4 class="font-bold text-orange-800">📊 Pick the best chart for: ${window.dTarget === 'pie' ? 'Percentages' : 'Comparing Quantities'}</h4><div class="mt-2"><button class="action-btn !bg-orange-500" onclick="window.showChart('bar')">Bar</button><button class="action-btn !bg-orange-500" onclick="window.showChart('pie')">Pie</button></div><div id="chart-area" class="mt-3 flex justify-center h-24 items-end"></div><p id="chart-success" class="text-orange-700 font-bold mt-2" style="display:none;">⭐ Correct Chart!</p></div>`; }
+                },
+                stats: {
+                    title: "Distributions", content: `<p>Analyzing the shape of data.</p>`,
+                    flashcards: [{ f: "Normal Distribution", b: "A bell-shaped curve." }],
+                    quizzes: [{ q: "Bell shape?", o: ["Normal", "Skewed"], a: 0, s: "Ding!" }],
+                    widget: () => `<div class="mt-4 p-4 bg-blue-100 border-4 border-blue-500 rounded-xl text-center"><h4 class="font-bold mb-2">🔔 Find the Bell Curve</h4><div class="flex justify-center gap-4 text-3xl cursor-pointer"><div onclick="window.playSound('win'); this.style.backgroundColor='lightgreen'; window.earnReward('widget_dist');">⛰️</div><div onclick="window.playSound('buzzer')">📉</div></div></div>`
+                },
+                console: {
+                    title: "R Console", content: `<p>Executing R scripts.</p>`,
+                    flashcards: [{ f: "<-", b: "The assignment operator in R (like =)." }],
+                    quizzes: [{ q: "Assign value?", o: ["<-", "=>"], a: 0, s: "Assigned!" }],
+                    widget: () => { window.dTarget = window.pickRandom(['x <- 5', 'y <- 10']); return `<div class="mt-4 p-4 bg-blue-100 border-4 border-blue-500 rounded-xl text-center"><h4 class="font-bold mb-2">💻 Assign Variable: ${window.dTarget}</h4><div class="flex justify-center items-center gap-2"><span>></span><input type="text" id="r-input" class="p-2 border rounded w-24"><button class="action-btn !bg-blue-600 !py-1" onclick="window.runRCode()">Run</button></div><div id="r-output" class="bg-gray-900 mt-2 p-2 text-gray-300 rounded">Ready...</div><p id="r-success" class="text-blue-700 font-bold mt-2" style="display:none;">⭐ Variables saved!</p></div>`; }
+                },
+                pipeline: {
+                    title: "R Pipeline", content: `<p>Build data pipelines by selecting the correct dataset and geometric visualization.</p>`,
+                    flashcards: [{ f: "dplyr", b: "R package for data manipulation." }, { f: "Pipeline", b: "Series of data processing steps." }],
+                    quizzes: [{ q: "Manipulates data?", o: ["dplyr", "ggplot2"], a: 0, s: "Tidied!" }, { q: "Processing steps?", o: ["Pipeline", "Loop"], a: 0, s: "Piped!" }],
+                    widget: () => { setTimeout(window.initRGame, 10); return `<div id="r-game-container"></div>`; }
+                }
+            }
+        };
+
+        // Init App
+        window.onload = function () {
+            window.loadProgress();
+        };
+
+    </script>
+
+</body>
+
+</html>
