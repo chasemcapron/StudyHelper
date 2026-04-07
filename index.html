@@ -1716,34 +1716,24 @@
                     🔒 Secret Portal</div>
             </div>
 
-            <!-- XP Stat -->
-            <div class="mb-8">
-                <div class="bg-blue-100 border-4 border-blue-500 rounded-3xl p-4 flex items-center justify-center gap-3 shadow-[6px_6px_0_#0066CC] max-w-xs mx-auto">
-                    <div class="text-4xl">📚</div>
-                    <div class="text-2xl fun-font text-blue-600"><span id="prelim-xp-num">0</span> XP</div>
-                </div>
-            </div>
-            <!-- Hidden days element kept for JS compatibility -->
+            <!-- Hidden elements kept for JS compatibility -->
+            <span id="prelim-xp-num" class="hidden"></span>
             <span id="prelim-days-num" class="hidden"></span>
+            <div id="prelim-daily-checkin" class="hidden"></div>
 
-            <!-- Daily Check-In (hidden, kept for compatibility) -->
-            <div id="prelim-daily-checkin" class="mb-10 hidden">
+            <!-- Topic Grid -->
+            <h2 class="fun-font text-4xl mb-6 text-gray-800">📚 Study Topics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12" id="prelim-topic-grid">
                 <!-- rendered by JS -->
             </div>
 
             <!-- Daily Drill Button -->
-            <div class="text-center mb-12 border-b-4 border-gray-300 pb-10">
+            <div class="text-center border-t-4 border-gray-300 pt-10">
                 <button onclick="startPrelimDailyDrill()"
                     class="action-btn !bg-yellow-400 !text-black !text-2xl !py-4 !px-8 shadow-[0_8px_0_#2d3436] hover:!translate-y-2 hover:shadow-[0_0_0_#2d3436]">
                     ⚡ Today's Daily Drill
                 </button>
                 <p class="font-bold text-gray-500 mt-3 text-lg">5 questions across all topics</p>
-            </div>
-
-            <!-- Topic Grid -->
-            <h2 class="fun-font text-4xl mb-6 text-gray-800">📚 Study Topics</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="prelim-topic-grid">
-                <!-- rendered by JS -->
             </div>
 
         </div>
